@@ -1,0 +1,36 @@
+<h1 class="title">Tasks</h1>
+<app-add-task (addTaskEvent)="addNewTask($event)"></app-add-task>
+<mat-card>
+  <p class="message" *ngIf="incompleteTasks.length === 0">No tasks on due</p>
+  <app-task-item
+    [task]="task"
+    *ngFor="let task of incompleteTasks"
+    (completeTaskEvent)="completeTask($event)"
+    (editTaskEvent)="editTask($event)"
+    (deleteTaskEvent)="deleteTask($event)"
+  ></app-task-item>
+
+  <mat-accordion class="accordion">
+    <mat-expansion-panel
+      class="mat-elevation-z0"
+      (opened)="panelOpenState = true"
+      (closed)="panelOpenState = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title>Completed </mat-panel-title>
+        <mat-panel-description>
+          {{ completedTasks.length }} tasks
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div>
+        <app-task-item
+          [task]="task"
+          *ngFor="let task of completedTasks"
+          (completeTaskEvent)="completeTask($event)"
+          (editTaskEvent)="editTask($event)"
+          (deleteTaskEvent)="deleteTask($event)"
+        ></app-task-item>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</mat-card>

@@ -1,0 +1,36 @@
+@use "src/sass/mixins" as mixins;
+@use "src/sass/variables" as vars;
+
+.task-item {
+  transition: all 0.3 ease-in-out;
+  box-shadow: none;
+  padding: vars.$secondaryPadding;
+  border-radius: vars.$primaryRadius;
+  &__row {
+    @include mixins.flex(10px, row, space-between);
+  }
+
+  &__buttons {
+    visibility: collapse;
+  }
+
+  &__button {
+    color: gray;
+  }
+
+  &__cover {
+    flex: 1;
+  }
+
+  &__text {
+    font-size: 18px;
+  }
+
+  &:hover &__buttons {
+    visibility: visible;
+  }
+
+  &:hover {
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+  }
+}

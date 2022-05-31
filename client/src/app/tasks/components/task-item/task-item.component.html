@@ -1,0 +1,18 @@
+<div class="task-item">
+  <div class="task-item__row">
+    <div class="task-item__cover">
+      <span class="task-item__text">{{ task.text }}</span>
+    </div>
+    <div class="task-item__buttons">
+      <button class="task-item__button" mat-icon-button (click)="onComplete()">
+        <mat-icon>{{ task.completed ? "autorenew" : "check" }}</mat-icon>
+      </button>
+      <button class="task-item__button" mat-icon-button (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button class="task-item__button" mat-icon-button (click)="onDelete()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
