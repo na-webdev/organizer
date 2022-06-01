@@ -12,6 +12,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDialogModule } from '@angular/material/dialog';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 const materialModules = [
   MatCardModule,
@@ -26,6 +27,7 @@ const materialModules = [
   MatCheckboxModule,
   MatExpansionModule,
   MatDialogModule,
+  DragDropModule,
 ];
 
 @NgModule({

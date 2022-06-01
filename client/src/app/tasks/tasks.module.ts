@@ -24,6 +24,12 @@ const routes: Routes = [
     ReactiveFormsModule,
   ],
   exports: [RouterModule],
-  declarations: [TasksComponent, AddTaskComponent, TaskItemComponent, DeleteDialogComponent, EditDialogComponent],
+  declarations: [
+    TasksComponent,
+    AddTaskComponent,
+    TaskItemComponent,
+    DeleteDialogComponent,
+    EditDialogComponent,
+  ],
 })
 export class TasksModule {}

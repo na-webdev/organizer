@@ -3,10 +3,10 @@
 
 .task-item {
   transition: all 0.3 ease-in-out;
+  flex: 1;
   box-shadow: vars.$primaryBoxShadow;
   padding: vars.$secondaryPadding;
   border-radius: vars.$primaryRadius;
-  margin: 8px 0;
 
   &__row {
     @include mixins.flex(10px, row, space-between);

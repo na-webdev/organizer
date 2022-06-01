@@ -1,3 +1,8 @@
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { TaskService } from '../../services/task.service';
@@ -22,6 +27,29 @@ export class TasksComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.tasksSubscription.unsubscribe();
+  }
+
+  drop(event: CdkDragDrop<TaskInterface[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+      this.incompleteTasks.forEach((task) => {
+        task.completed && (task.completed = false);
+      });
+      this.completedTasks.forEach((task) => {
+        !task.completed && (task.completed = true);
+      });
+    }
   }
 
   addNewTask(task: TaskInterface): void {
