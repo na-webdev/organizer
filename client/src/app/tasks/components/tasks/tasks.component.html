@@ -1,7 +1,9 @@
 <h1 class="title">Tasks</h1>
 <app-add-task (addTaskEvent)="addNewTask($event)"></app-add-task>
 <mat-card>
-  <p class="message" *ngIf="incompleteTasks.length === 0">No tasks on due</p>
+  <div class="message" *ngIf="incompleteTasks.length === 0">
+    <mat-icon>task</mat-icon>
+  </div>
   <app-task-item
     [task]="task"
     *ngFor="let task of incompleteTasks"
@@ -16,7 +18,7 @@
       (opened)="panelOpenState = true"
       (closed)="panelOpenState = false"
     >
-      <mat-expansion-panel-header>
+      <mat-expansion-panel-header class="accordion__header">
         <mat-panel-title>Completed </mat-panel-title>
         <mat-panel-description>
           {{ completedTasks.length }} tasks
