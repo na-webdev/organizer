@@ -1,0 +1,68 @@
+@use "src/sass/variables.scss" as vars;
+.container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  flex: 1;
+
+  &__sidenav-container {
+    flex: 1 0 auto;
+  }
+
+  &__sidenav-content {
+    padding: vars.$primaryPadding;
+  }
+
+  &__menu-toggle {
+    margin-left: -10px;
+  }
+}
+
+#side-nav {
+  &.menu-closed {
+    width: 60px;
+    transition: width 0.2s linear;
+  }
+  &.menu-open {
+    width: 200px;
+    transition: width 0.2s linear;
+  }
+}
+
+.mat-list-base {
+  padding: 12px 0 0 0;
+}
+
+.menu {
+  &__label-hidden {
+    visibility: collapse;
+  }
+
+  &__label-visible {
+    visibility: visible;
+    transition-delay: 0.3s;
+  }
+
+  &__label {
+    margin-left: 10px;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: -10px;
+  }
+
+  &__title {
+    font-size: 24px;
+  }
+}
+
+.active {
+  background-color: #fafafa;
+}

@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>Edit task</h2>
+<mat-dialog-content class="mat-typography">
+  <form autocomplete="off" [formGroup]="editTaskForm" class="add-task">
+    <mat-form-field
+      style="width: 100%"
+      class="dialog-body__row"
+      appearance="outline"
+    >
+      <mat-label>Name</mat-label>
+      <input formControlName="text" matInput cdkFocusInitial />
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    mat-button
+    [mat-dialog-close]="{
+      text: editTaskForm.value.text,
+      completed: task.completed,
+      id: task.id
+    }"
+    cdkFocusInitial
+  >
+    Save
+  </button>
+</mat-dialog-actions>

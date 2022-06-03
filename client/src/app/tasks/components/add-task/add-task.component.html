@@ -1,0 +1,23 @@
+<form
+  autocomplete="off"
+  [formGroup]="addTaskForm"
+  (ngSubmit)="onSubmit()"
+  class="add-task"
+>
+  <div class="add-task__row">
+    <mat-form-field class="add-task__field" appearance="outline">
+      <mat-label>Add task</mat-label>
+      <input formControlName="task" class="auth-form__input" matInput />
+      <mat-error *ngIf="addTaskForm.invalid">{{ getTaskError() }}</mat-error>
+    </mat-form-field>
+    <button
+      class="add-task__button"
+      type="submit"
+      [disabled]="addTaskForm.invalid"
+      mat-raised-button
+      color="primary"
+    >
+      Add
+    </button>
+  </div>
+</form>

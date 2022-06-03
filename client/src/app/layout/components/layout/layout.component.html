@@ -1,0 +1,65 @@
+<div class="container" [class.is-mobile]="mobileQuery.matches">
+  <mat-sidenav-container
+    class="container__sidenav-container"
+    [style.marginTop.px]="mobileQuery.matches ? 0 : 0"
+  >
+    <mat-sidenav
+      #snav
+      id="side-nav"
+      [mode]="mobileQuery.matches ? 'over' : 'side'"
+      [fixedInViewport]="mobileQuery.matches"
+      fixedTopGap="0"
+      [class.menu-open]="isMenuOpen"
+      [class.menu-closed]="!isMenuOpen"
+      [opened]="!mobileQuery.matches"
+    >
+      <mat-nav-list class="menu">
+        <a mat-list-item (click)="onToolbarMenuToggle()">
+          <div class="menu__header" *ngIf="isMenuOpen">
+            <button mat-icon-button>
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <span class="menu__title">Organizer</span>
+          </div>
+          <mat-icon *ngIf="!isMenuOpen">chevron_right</mat-icon>
+        </a>
+        <a
+          mat-list-item
+          [routerLink]="[nav.route]"
+          [routerLinkActive]="'active'"
+          *ngFor="let nav of menuItems"
+        >
+          <mat-icon>{{ nav.icon }}</mat-icon>
+          <span
+            class="menu__label"
+            [class]="!isMenuOpen ? 'menu__label-hidden' : 'menu__label-visible'"
+            >{{ nav.title }}</span
+          >
+        </a>
+        <a mat-list-item (click)="toggleTheme()">
+          <mat-icon>{{ darkTheme ? "light_mode" : "dark_mode" }}</mat-icon>
+          <span
+            class="menu__label"
+            [class]="!isMenuOpen ? 'menu__label-hidden' : 'menu__label-visible'"
+            >{{ darkTheme ? "Light Mode" : "Dark Mode" }}</span
+          >
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content
+      class="container__sidenav-content"
+      [ngStyle]="{ 'margin-left.px': contentMargin }"
+    >
+      <button
+        [style.display]="mobileQuery.matches ? 'inline-block' : 'none'"
+        mat-icon-button
+        (click)="snav.toggle()"
+        class="container__menu-toggle"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+      <ng-content></ng-content>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
