@@ -11,7 +11,7 @@
       fixedTopGap="0"
       [class.menu-open]="isMenuOpen"
       [class.menu-closed]="!isMenuOpen"
-      opened
+      [opened]="!mobileQuery.matches"
     >
       <mat-nav-list class="menu">
         <a mat-list-item (click)="onToolbarMenuToggle()">
@@ -26,6 +26,7 @@
         <a
           mat-list-item
           [routerLink]="[nav.route]"
+          [routerLinkActive]="'active'"
           *ngFor="let nav of menuItems"
         >
           <mat-icon>{{ nav.icon }}</mat-icon>
@@ -54,6 +55,7 @@
         [style.display]="mobileQuery.matches ? 'inline-block' : 'none'"
         mat-icon-button
         (click)="snav.toggle()"
+        class="container__menu-toggle"
       >
         <mat-icon>menu</mat-icon>
       </button>

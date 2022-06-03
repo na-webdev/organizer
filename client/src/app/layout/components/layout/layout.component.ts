@@ -6,7 +6,6 @@ import {
   OnDestroy,
   Renderer2,
 } from '@angular/core';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MenuItem } from '../../types/menu-item.interface';
 import { menuItems } from './menu-item.config';
 import { DOCUMENT } from '@angular/common';
@@ -42,13 +41,13 @@ export class LayoutComponent implements OnDestroy {
   }
 
   onToolbarMenuToggle(): void {
-    console.log('toolbar menu toggle', this.isMenuOpen);
     this.isMenuOpen = !this.isMenuOpen;
-    this.contentMargin = this.isMenuOpen
-      ? 200
-      : this.mobileQuery.matches
-      ? 0
-      : 60;
+    this.contentMargin =
+      this.isMenuOpen && !this.mobileQuery.matches
+        ? 200
+        : this.mobileQuery.matches
+        ? 0
+        : 60;
   }
 
   toggleTheme(): void {

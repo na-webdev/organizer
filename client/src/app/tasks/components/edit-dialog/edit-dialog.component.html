@@ -1,7 +1,11 @@
 <h2 mat-dialog-title>Edit task</h2>
 <mat-dialog-content class="mat-typography">
   <form autocomplete="off" [formGroup]="editTaskForm" class="add-task">
-    <mat-form-field class="dialog-body__row" appearance="outline">
+    <mat-form-field
+      style="width: 100%"
+      class="dialog-body__row"
+      appearance="outline"
+    >
       <mat-label>Name</mat-label>
       <input formControlName="text" matInput cdkFocusInitial />
     </mat-form-field>

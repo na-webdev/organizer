@@ -6,7 +6,6 @@ import { TaskInterface } from '../../types/task.interface';
 @Component({
   selector: 'app-edit-dialog',
   templateUrl: './edit-dialog.component.html',
-  styleUrls: ['./edit-dialog.component.scss'],
 })
 export class EditDialogComponent implements OnInit {
   editTaskForm: FormGroup = new FormGroup({

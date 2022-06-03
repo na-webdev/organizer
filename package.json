@@ -1,0 +1,24 @@
+{
+  "name": "organizer",
+  "version": "1.0.0",
+  "description": "\"It is an awesome application to organize plans and task\"",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/na-webdev/organizer.git"
+  },
+  "keywords": [
+    "tasks",
+    "organize",
+    "plans"
+  ],
+  "author": "Nurmatov Abdurahim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/na-webdev/organizer/issues"
+  },
+  "homepage": "https://github.com/na-webdev/organizer#readme"
+}

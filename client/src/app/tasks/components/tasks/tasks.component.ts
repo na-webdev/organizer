@@ -29,7 +29,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     this.tasksSubscription.unsubscribe();
   }
 
-  drop(event: CdkDragDrop<TaskInterface[]>) {
+  drop(event: CdkDragDrop<TaskInterface[]>): void {
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,

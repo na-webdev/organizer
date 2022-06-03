@@ -16,6 +16,10 @@
   &__sidenav-content {
     padding: vars.$primaryPadding;
   }
+
+  &__menu-toggle {
+    margin-left: -10px;
+  }
 }
 
 #side-nav {
@@ -57,4 +61,8 @@
   &__title {
     font-size: 24px;
   }
+}
+
+.active {
+  background-color: #fafafa;
 }

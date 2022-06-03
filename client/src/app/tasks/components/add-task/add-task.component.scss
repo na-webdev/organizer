@@ -1,11 +1,12 @@
 @use "src/sass/mixins" as mixins;
 .add-task {
+  margin-bottom: 5px;
   &__row {
     @include mixins.flex(10px);
   }
   &__button {
-    padding: 7.5px 20px;
-    margin-top: -18px;
+    padding: 8px 20px;
+    margin-top: -19px;
   }
 
   &__field {

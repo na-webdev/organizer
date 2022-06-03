@@ -11,7 +11,7 @@ export class AddTaskComponent implements OnInit {
   @Output() addTaskEvent: EventEmitter<TaskInterface> = new EventEmitter();
 
   addTaskForm: FormGroup = new FormGroup({
-    task: new FormControl(''),
+    task: new FormControl('', [Validators.minLength(3)]),
   });
 
   constructor() {}
@@ -24,5 +24,11 @@ export class AddTaskComponent implements OnInit {
       this.addTaskEvent.emit({ id: 0, text: task, completed: false });
       this.addTaskForm.reset();
     }
+  }
+
+  getTaskError(): string {
+    return this.addTaskForm.get('task')!.errors?.['minlength']
+      ? 'Task must be at least 3 characters long'
+      : '';
   }
 }
