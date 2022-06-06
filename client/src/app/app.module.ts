@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from './layout/layout.module';
 import { TasksModule } from './tasks/tasks.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
@@ -15,6 +16,7 @@ import { TasksModule } from './tasks/tasks.module';
     BrowserAnimationsModule,
     LayoutModule,
     TasksModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

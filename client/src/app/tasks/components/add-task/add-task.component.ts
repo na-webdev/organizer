@@ -7,27 +7,25 @@ import { TaskInterface } from '../../types/task.interface';
   templateUrl: './add-task.component.html',
   styleUrls: ['./add-task.component.scss'],
 })
-export class AddTaskComponent implements OnInit {
+export class AddTaskComponent {
   @Output() addTaskEvent: EventEmitter<TaskInterface> = new EventEmitter();
 
   addTaskForm: FormGroup = new FormGroup({
-    task: new FormControl('', [Validators.minLength(3)]),
+    title: new FormControl('', [Validators.minLength(3)]),
   });
 
   constructor() {}
 
-  ngOnInit(): void {}
-
   onSubmit(): void {
-    if (this.addTaskForm.get('task')?.value) {
-      const { task } = this.addTaskForm.value;
-      this.addTaskEvent.emit({ id: 0, text: task, completed: false });
+    if (this.addTaskForm.get('title')?.value) {
+      const { title } = this.addTaskForm.value;
+      this.addTaskEvent.emit({ importance: 0, title: title, completed: false });
       this.addTaskForm.reset();
     }
   }
 
   getTaskError(): string {
-    return this.addTaskForm.get('task')!.errors?.['minlength']
+    return this.addTaskForm.get('title')!.errors?.['minlength']
       ? 'Task must be at least 3 characters long'
       : '';
   }

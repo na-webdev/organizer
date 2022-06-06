@@ -7,11 +7,9 @@ import { TaskInterface } from '../../types/task.interface';
   selector: 'app-edit-dialog',
   templateUrl: './edit-dialog.component.html',
 })
-export class EditDialogComponent implements OnInit {
+export class EditDialogComponent {
   editTaskForm: FormGroup = new FormGroup({
-    text: new FormControl(this.task.text),
+    text: new FormControl(this.task.title),
   });
   constructor(@Inject(MAT_DIALOG_DATA) public task: TaskInterface) {}
-
-  ngOnInit(): void {}
 }

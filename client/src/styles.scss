@@ -10,7 +10,32 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: "Poppins", sans-serif;
+}
+
+.mat-drawer-inner-container {
+  overflow: hidden !important;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

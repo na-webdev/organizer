@@ -4,9 +4,10 @@
       <mat-checkbox
         [checked]="task.completed"
         class="example-margin"
+        color="primary"
         (change)="onComplete()"
       >
-        <span class="task-item__text">{{ task.text }}</span>
+        <span class="task-item__text">{{ task.title }}</span>
       </mat-checkbox>
     </div>
     <div class="task-item__buttons">
