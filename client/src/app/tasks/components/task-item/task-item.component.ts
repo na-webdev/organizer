@@ -11,7 +11,7 @@ import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 })
 export class TaskItemComponent {
   @Input() task!: TaskInterface;
-  @Output() editTaskEvent: EventEmitter<TaskInterface> = new EventEmitter();
+  @Output() updateTaskEvent: EventEmitter<TaskInterface> = new EventEmitter();
   @Output() deleteTaskEvent: EventEmitter<TaskInterface> = new EventEmitter();
   @Output() completeTaskEvent: EventEmitter<TaskInterface> = new EventEmitter();
   isEditMode: boolean = false;
@@ -24,7 +24,7 @@ export class TaskItemComponent {
       data: this.task,
     });
     dialogRef.afterClosed().subscribe((result) => {
-      this.editTaskEvent.emit(result);
+      this.updateTaskEvent.emit(result);
     });
   }
 

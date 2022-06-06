@@ -1,10 +1,6 @@
-import {
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { TaskService } from '../../services/task.service';
 import { TaskInterface } from '../../types/task.interface';
 
@@ -19,7 +15,9 @@ export class TasksComponent implements OnInit, OnDestroy {
   incompleteTasks: TaskInterface[] = [];
   tasksSubscription!: Subscription;
 
-  constructor(private taskService: TaskService) {}
+  constructor(private taskService: TaskService) {
+    this.taskService.requestUserTasks();
+  }
 
   ngOnInit(): void {
     this.getAllTasks();
@@ -29,43 +27,34 @@ export class TasksComponent implements OnInit, OnDestroy {
     this.tasksSubscription.unsubscribe();
   }
 
-  drop(event: CdkDragDrop<TaskInterface[]>): void {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-      this.incompleteTasks.forEach((task) => {
-        task.completed && (task.completed = false);
-      });
-      this.completedTasks.forEach((task) => {
-        !task.completed && (task.completed = true);
-      });
-    }
+  drop(event: CdkDragDrop<TaskInterface[]>) {
+    moveItemInArray(
+      this.incompleteTasks,
+      event.previousIndex,
+      event.currentIndex
+    );
+    this.incompleteTasks.forEach((task, index) => {
+      task.importance = index;
+      this.updateTask(task);
+    });
   }
 
   addNewTask(task: TaskInterface): void {
-    this.taskService.addNewTask(task);
+    task.importance = this.incompleteTasks[0].importance - 1;
+    this.taskService.addNewTask(task).pipe(take(1)).subscribe();
   }
 
   deleteTask(task: TaskInterface): void {
-    this.taskService.deleteTask(task);
+    this.taskService.deleteTask(task).pipe(take(1)).subscribe();
   }
 
-  editTask(task: TaskInterface): void {
-    this.taskService.updateTask(task);
+  updateTask(task: TaskInterface): void {
+    this.taskService.updateTask(task).pipe(take(1)).subscribe();
   }
 
   completeTask(task: TaskInterface): void {
-    this.taskService.completeTask(task);
+    task.completed = !task.completed;
+    this.taskService.updateTask(task).pipe(take(1)).subscribe();
   }
 
   getAllTasks(): void {
@@ -74,6 +63,7 @@ export class TasksComponent implements OnInit, OnDestroy {
       .subscribe((tasks) => {
         this.completedTasks = tasks.filter((task) => task.completed);
         this.incompleteTasks = tasks.filter((task) => !task.completed);
+        this.incompleteTasks.sort((a, b) => a.importance - b.importance);
       });
   }
 }
