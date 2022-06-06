@@ -13,6 +13,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { AlertComponent } from './components/alert/alert.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const materialModules = [
   MatCardModule,
@@ -28,11 +30,12 @@ const materialModules = [
   MatExpansionModule,
   MatDialogModule,
   DragDropModule,
+  MatSnackBarModule,
 ];
 
 @NgModule({
-  declarations: [],
   imports: [CommonModule, ...materialModules],
   exports: [...materialModules],
+  declarations: [AlertComponent],
 })
 export class MaterialModule {}

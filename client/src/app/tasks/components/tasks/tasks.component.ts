@@ -1,6 +1,7 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, take } from 'rxjs';
+import { AlertService } from 'src/app/shared/services/alert.service';
 import { TaskService } from '../../services/task.service';
 import { TaskInterface } from '../../types/task.interface';
 
@@ -15,7 +16,10 @@ export class TasksComponent implements OnInit, OnDestroy {
   incompleteTasks: TaskInterface[] = [];
   tasksSubscription!: Subscription;
 
-  constructor(private taskService: TaskService) {
+  constructor(
+    private taskService: TaskService,
+    private alertService: AlertService
+  ) {
     this.taskService.requestUserTasks();
   }
 
@@ -27,7 +31,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     this.tasksSubscription.unsubscribe();
   }
 
-  drop(event: CdkDragDrop<TaskInterface[]>) {
+  drop(event: CdkDragDrop<TaskInterface[]>): void {
     moveItemInArray(
       this.incompleteTasks,
       event.previousIndex,
@@ -40,7 +44,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   addNewTask(task: TaskInterface): void {
-    task.importance = this.incompleteTasks[0].importance - 1;
+    task.importance = this.incompleteTasks[0]?.importance || 0 - 1;
     this.taskService.addNewTask(task).pipe(take(1)).subscribe();
   }
 
@@ -62,8 +66,13 @@ export class TasksComponent implements OnInit, OnDestroy {
       .getAllTasks()
       .subscribe((tasks) => {
         this.completedTasks = tasks.filter((task) => task.completed);
+        this.completedTasks.sort((a, b) => a.importance - b.importance);
         this.incompleteTasks = tasks.filter((task) => !task.completed);
         this.incompleteTasks.sort((a, b) => a.importance - b.importance);
       });
+  }
+
+  callAlert(type: string) {
+    this.alertService.alertMessage('Hello from alert service', type);
   }
 }

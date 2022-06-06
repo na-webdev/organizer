@@ -1,0 +1,22 @@
+@use "src/sass/variables" as vars;
+@use "src/sass/mixins" as mixins;
+::ng-deep .snackbar-success {
+  background-color: vars.$alertSuccess !important;
+  color: white !important;
+}
+
+::ng-deep .snackbar-error {
+  background-color: vars.$alertError !important;
+  color: white !important;
+}
+
+::ng-deep .snackbar-info {
+  background-color: vars.$alertInfo !important;
+  color: white !important;
+}
+
+:host {
+  @include mixins.flex(10px, row, space-between);
+  min-width: 25vw !important;
+  font-size: 18px;
+}
