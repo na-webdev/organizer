@@ -1,3 +1,3 @@
 export interface ResponseInterface {
-  _id: number;
+  _id: string;
 }

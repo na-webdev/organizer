@@ -1,5 +1,5 @@
 export interface TaskInterface {
-  _id?: number;
+  _id?: string;
   title: string;
   completed: boolean;
   importance: number;
