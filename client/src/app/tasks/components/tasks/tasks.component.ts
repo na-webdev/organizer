@@ -44,32 +44,69 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   addNewTask(task: TaskInterface): void {
-    task.importance = this.incompleteTasks[0]?.importance || 0 - 1;
-    this.taskService.addNewTask(task).pipe(take(1)).subscribe();
+    task.importance = this.incompleteTasks[0]
+      ? this.incompleteTasks[0].importance - 1
+      : 0;
+    this.taskService
+      .addNewTask(task)
+      .pipe(take(1))
+      .subscribe(
+        (res) => {},
+        (err) => {
+          this.alertService.alertMessage(err.error.message, 'danger');
+        }
+      );
   }
 
   deleteTask(task: TaskInterface): void {
-    this.taskService.deleteTask(task).pipe(take(1)).subscribe();
+    this.taskService
+      .deleteTask(task)
+      .pipe(take(1))
+      .subscribe(
+        (res) => {},
+        (err) => {
+          this.alertService.alertMessage(err.error.message, 'danger');
+        }
+      );
   }
 
   updateTask(task: TaskInterface): void {
-    this.taskService.updateTask(task).pipe(take(1)).subscribe();
+    this.taskService
+      .updateTask(task)
+      .pipe(take(1))
+      .subscribe(
+        (res) => {},
+        (err) => {
+          this.alertService.alertMessage(err.error.message, 'danger');
+        }
+      );
   }
 
   completeTask(task: TaskInterface): void {
     task.completed = !task.completed;
-    this.taskService.updateTask(task).pipe(take(1)).subscribe();
+    this.taskService
+      .updateTask(task)
+      .pipe(take(1))
+      .subscribe(
+        (res) => {},
+        (err) => {
+          this.alertService.alertMessage(err.error.message, 'danger');
+        }
+      );
   }
 
   getAllTasks(): void {
-    this.tasksSubscription = this.taskService
-      .getAllTasks()
-      .subscribe((tasks) => {
+    this.tasksSubscription = this.taskService.getAllTasks().subscribe(
+      (tasks) => {
         this.completedTasks = tasks.filter((task) => task.completed);
         this.completedTasks.sort((a, b) => a.importance - b.importance);
         this.incompleteTasks = tasks.filter((task) => !task.completed);
         this.incompleteTasks.sort((a, b) => a.importance - b.importance);
-      });
+      },
+      (err) => {
+        this.alertService.alertMessage(err.error.message, 'danger');
+      }
+    );
   }
 
   callAlert(type: string) {

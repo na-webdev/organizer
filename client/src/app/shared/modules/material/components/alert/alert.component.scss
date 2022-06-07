@@ -5,7 +5,7 @@
   color: white !important;
 }
 
-::ng-deep .snackbar-error {
+::ng-deep .snackbar-danger {
   background-color: vars.$alertError !important;
   color: white !important;
 }
@@ -16,7 +16,7 @@
 }
 
 :host {
-  @include mixins.flex(10px, row, space-between);
+  @include mixins.flex(10px, row, space-between, center, no-wrap);
   min-width: 25vw !important;
   font-size: 18px;
 }

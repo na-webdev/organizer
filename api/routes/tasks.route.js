@@ -6,7 +6,7 @@ let {
   addNewTask,
   updateTask,
   deleteTask,
-} = require("../controllers/tasks");
+} = require("../controllers/tasks.controller");
 
 router.get("/", getAllTasks);
 router.post("/", addNewTask);
