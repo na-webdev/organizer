@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Task = require("../models/task.model.js");
 const createError = require("http-errors");
-const taskValidation = require("../validations/task.validation.js");
 
 const getAllTasks = async (req, res, next) => {
   try {
@@ -14,8 +13,7 @@ const getAllTasks = async (req, res, next) => {
 
 const addNewTask = async (req, res, next) => {
   try {
-    const validatedTask = await taskValidation.validate(req.body);
-    const newTask = new Task(validatedTask);
+    const newTask = new Task(req.body);
     await newTask.save();
     res.status(201).json({ _id: newTask._id });
   } catch (error) {
