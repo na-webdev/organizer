@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, take, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, take, tap } from 'rxjs';
 import { TaskInterface } from '../types/task.interface';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ResponseInterface } from '../types/response.interface';
+import { AlertService } from 'src/app/shared/services/alert.service';
 
 const apiUrl = environment.apiUrl;
 
@@ -14,7 +15,7 @@ export class TaskService {
   private tasks: TaskInterface[] = [];
   private tasksUpdated = new BehaviorSubject<TaskInterface[]>(this.tasks);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private alertService: AlertService) {}
 
   requestUserTasks(): void {
     this.http

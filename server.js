@@ -3,8 +3,9 @@ let morgan = require("morgan");
 let dotenv = require("dotenv");
 let mongoose = require("mongoose");
 let cors = require("cors");
+let createError = require("http-errors");
 
-let tasksRouter = require("./api/routes/tasks.js");
+let tasksRouter = require("./api/routes/tasks.route.js");
 
 dotenv.config();
 mongoose.connect(
@@ -27,17 +28,14 @@ app.use("/tasks", tasksRouter);
 
 // error handling
 app.use((req, res, next) => {
-  const error = new Error("Not found");
-  error.status = 404;
-  next(error);
+  next(createError(404, "Not found"));
 });
 
 app.use((error, req, res, next) => {
   res.status(error.status || 500);
   res.json({
-    error: {
-      message: error.message,
-    },
+    status: error.status,
+    message: error.message,
   });
 });
 

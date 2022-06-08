@@ -24,7 +24,9 @@ export class TaskItemComponent {
       data: this.task,
     });
     dialogRef.afterClosed().subscribe((result) => {
-      this.updateTaskEvent.emit(result);
+      if (result) {
+        this.updateTaskEvent.emit(result);
+      }
     });
   }
 
