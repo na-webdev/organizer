@@ -1,7 +1,8 @@
-let express = require("express");
-let router = express.Router();
+const express = require("express");
+const router = express.Router();
+const taskValidator = require("../middlewares/validators/task.validator");
 
-let {
+const {
   getAllTasks,
   addNewTask,
   updateTask,
@@ -9,8 +10,8 @@ let {
 } = require("../controllers/tasks.controller");
 
 router.get("/", getAllTasks);
-router.post("/", addNewTask);
-router.patch("/:id", updateTask);
+router.post("/", taskValidator, addNewTask);
+router.patch("/:id", taskValidator, updateTask);
 router.delete("/:id", deleteTask);
 
 module.exports = router;

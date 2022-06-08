@@ -45,7 +45,11 @@ export class TaskService {
 
   updateTask(task: TaskInterface): Observable<ResponseInterface> {
     return this.http
-      .patch<ResponseInterface>(apiUrl + 'tasks/' + task._id, task)
+      .patch<ResponseInterface>(apiUrl + 'tasks/' + task._id, {
+        title: task.title,
+        completed: task.completed,
+        importance: task.importance,
+      })
       .pipe(
         tap((res) => {
           this.tasks = this.tasks.map((t) =>

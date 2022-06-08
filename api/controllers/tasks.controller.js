@@ -1,10 +1,10 @@
-let mongoose = require("mongoose");
-let Task = require("../models/task.model.js");
-let createError = require("http-errors");
+const mongoose = require("mongoose");
+const Task = require("../models/task.model.js");
+const createError = require("http-errors");
 
 const getAllTasks = async (req, res, next) => {
   try {
-    let tasks = await Task.find({});
+    const tasks = await Task.find({});
     res.status(200).json(tasks);
   } catch (error) {
     next(error);
@@ -13,13 +13,14 @@ const getAllTasks = async (req, res, next) => {
 
 const addNewTask = async (req, res, next) => {
   try {
-    let newTask = new Task(req.body);
+    const newTask = new Task(req.body);
     await newTask.save();
     res.status(201).json({ _id: newTask._id });
   } catch (error) {
+    if (error.isJoi) error.status = 422;
+
     if (error instanceof mongoose.Error.ValidationError) {
-      console.log(error.message);
-      next(createError(400, error.message));
+      next(createError(422, error.message));
       return;
     }
 
@@ -29,7 +30,7 @@ const addNewTask = async (req, res, next) => {
 
 const updateTask = async (req, res, next) => {
   try {
-    let task = await Task.findOneAndUpdate({ _id: req.params.id }, req.body, {
+    const task = await Task.findOneAndUpdate({ _id: req.params.id }, req.body, {
       new: true,
     });
 
@@ -40,12 +41,12 @@ const updateTask = async (req, res, next) => {
     res.status(200).json({ _id: task._id });
   } catch (error) {
     if (error instanceof mongoose.Error.CastError) {
-      next(createError(400, "Invalid id"));
+      next(createError(422, "Invalid id"));
       return;
     }
 
     if (error instanceof mongoose.Error.ValidationError) {
-      next(createError(400, error.message));
+      next(createError(422, error.message));
       return;
     }
 
@@ -55,7 +56,7 @@ const updateTask = async (req, res, next) => {
 
 const deleteTask = async (req, res, next) => {
   try {
-    let task = await Task.findByIdAndDelete(req.params.id);
+    const task = await Task.findByIdAndDelete(req.params.id);
 
     if (!task) {
       throw createError(404, "Task not found");
@@ -64,7 +65,7 @@ const deleteTask = async (req, res, next) => {
     res.status(200).json({ _id: task._id });
   } catch (error) {
     if (error instanceof mongoose.Error.CastError) {
-      next(createError(400, "Invalid id"));
+      next(createError(422, "Invalid id"));
       return;
     }
 

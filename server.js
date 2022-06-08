@@ -1,11 +1,11 @@
-let express = require("express");
-let morgan = require("morgan");
-let dotenv = require("dotenv");
-let mongoose = require("mongoose");
-let cors = require("cors");
-let createError = require("http-errors");
+const express = require("express");
+const morgan = require("morgan");
+const dotenv = require("dotenv");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const createError = require("http-errors");
 
-let tasksRouter = require("./api/routes/tasks.route.js");
+const tasksRouter = require("./api/routes/tasks.route.js");
 
 dotenv.config();
 mongoose.connect(
@@ -14,8 +14,8 @@ mongoose.connect(
   (err) => console.log(err)
 );
 
-let app = express();
-let port = process.env.PORT || 5000;
+const app = express();
+const port = process.env.PORT || 5000;
 
 // middlewares
 app.use(cors());
