@@ -1,4 +1,7 @@
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatSnackBar, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
+import { MatSnackBarMock } from 'src/app/shared/services/mocks/mat-snack-bar.mock';
 
 import { AlertComponent } from './alert.component';
 
@@ -8,9 +11,16 @@ describe('AlertComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AlertComponent ]
-    })
-    .compileComponents();
+      declarations: [AlertComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      providers: [
+        { provide: MatSnackBar, useValue: MatSnackBarMock },
+        {
+          provide: MAT_SNACK_BAR_DATA,
+          useValue: { message: jasmine.createSpy() },
+        },
+      ],
+    }).compileComponents();
   });
 
   beforeEach(() => {
