@@ -2,6 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TaskInterfaceMock } from '../../services/mocks/task-interface.mock';
 
 import { EditDialogComponent } from './edit-dialog.component';
 
@@ -17,7 +18,7 @@ describe('EditDialogComponent', () => {
       providers: [
         {
           provide: MAT_DIALOG_DATA,
-          useValue: { title: '', completed: false, importance: 0 },
+          useValue: TaskInterfaceMock,
         },
       ],
     }).compileComponents();
