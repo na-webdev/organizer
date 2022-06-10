@@ -2,7 +2,7 @@
 @use "src/sass/variables" as vars;
 
 .task-item {
-  transition: all 0.3 ease-in-out;
+  transition: all 0.2s ease-in-out;
   flex: 1;
   box-shadow: vars.$primaryBoxShadow;
   padding: vars.$secondaryPadding;
@@ -33,6 +33,6 @@
   }
 
   &:hover {
-    cursor: grab;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 10px;
   }
 }
