@@ -7,7 +7,7 @@
   <div class="add-task__row">
     <mat-form-field class="add-task__field" appearance="outline">
       <mat-label>Add task</mat-label>
-      <input formControlName="title" class="auth-form__input" matInput />
+      <input formControlName="title" class="add-task__input" matInput />
       <mat-error *ngIf="addTaskForm.invalid">{{ getTaskError() }}</mat-error>
     </mat-form-field>
     <button

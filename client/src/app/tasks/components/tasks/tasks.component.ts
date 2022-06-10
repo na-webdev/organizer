@@ -37,10 +37,7 @@ export class TasksComponent implements OnInit, OnDestroy {
       event.previousIndex,
       event.currentIndex
     );
-    this.incompleteTasks.forEach((task, index) => {
-      task.importance = index;
-      this.updateTask(task);
-    });
+    this.taskService.reorderTasks(this.incompleteTasks);
   }
 
   addNewTask(task: TaskInterface): void {
@@ -99,9 +96,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     this.tasksSubscription = this.taskService.getAllTasks().subscribe(
       (tasks) => {
         this.completedTasks = tasks.filter((task) => task.completed);
-        this.completedTasks.sort((a, b) => a.importance - b.importance);
         this.incompleteTasks = tasks.filter((task) => !task.completed);
-        this.incompleteTasks.sort((a, b) => a.importance - b.importance);
       },
       (err) => {
         this.alertService.alertMessage(err.error.message, 'danger');

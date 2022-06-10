@@ -1,6 +1,12 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TaskService } from '../../services/task.service';
+import { AlertService } from 'src/app/shared/services/alert.service';
 
 import { TasksComponent } from './tasks.component';
+import { TaskServiceMock } from '../../services/mocks/task-service.mock';
+import { AlertServiceMock } from 'src/app/shared/services/mocks/alert-service.mock';
 
 describe('TasksComponent', () => {
   let component: TasksComponent;
@@ -8,9 +14,14 @@ describe('TasksComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TasksComponent ]
-    })
-    .compileComponents();
+      imports: [HttpClientTestingModule],
+      declarations: [TasksComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      providers: [
+        { provide: TaskService, useValue: TaskServiceMock },
+        { provide: AlertService, useValue: AlertServiceMock },
+      ],
+    }).compileComponents();
   });
 
   beforeEach(() => {

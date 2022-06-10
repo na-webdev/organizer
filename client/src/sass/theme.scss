@@ -2,9 +2,9 @@
 
 @include mat-core();
 
-$mat-theming-primary: mat-palette($mat-indigo);
-$mat-theming-accent: mat-palette($mat-pink, A200, A100, A400);
-$mat-theming-warn: mat-palette($mat-red);
+$mat-theming-primary: mat-palette($mat-blue, 800);
+$mat-theming-accent: mat-palette($mat-green, 600);
+$mat-theming-warn: mat-palette($mat-pink, A200);
 
 $mat-theming-theme: mat-light-theme(
   $mat-theming-primary,

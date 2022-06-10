@@ -22,7 +22,7 @@ export class TaskService {
       .get<TaskInterface[]>(apiUrl + 'tasks')
       .pipe(
         tap((tasks: TaskInterface[]) => {
-          this.tasks = tasks.sort((a, b) => a.importance - b.importance);
+          this.tasks = tasks;
           this.tasksUpdated.next(this.tasks);
         }),
         take(1)
@@ -58,6 +58,19 @@ export class TaskService {
           this.tasksUpdated.next(this.tasks);
         })
       );
+  }
+
+  reorderTasks(tasks: TaskInterface[]): void {
+    const listOfIds = tasks.map((t) => t._id);
+    this.http
+      .put<{ message: string }>(apiUrl + 'tasks/reorder', { listOfIds })
+      .pipe(
+        tap((res) => {
+          this.tasks = tasks;
+          this.tasksUpdated.next(this.tasks);
+        })
+      )
+      .subscribe();
   }
 
   deleteTask(task: TaskInterface): Observable<ResponseInterface> {
