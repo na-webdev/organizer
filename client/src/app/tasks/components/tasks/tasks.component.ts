@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, take } from 'rxjs';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { TaskService } from '../../services/task.service';
-import { TaskInterface } from '../../types/task.interface';
+import { TaskInterface } from '../../../shared/types/task.interface';
 
 @Component({
   selector: 'app-tasks',
@@ -37,7 +37,7 @@ export class TasksComponent implements OnInit, OnDestroy {
       event.previousIndex,
       event.currentIndex
     );
-    this.taskService.reorderTasks(this.incompleteTasks);
+    this.taskService.reorderTasks(this.incompleteTasks, this.completedTasks);
   }
 
   addNewTask(task: TaskInterface): void {

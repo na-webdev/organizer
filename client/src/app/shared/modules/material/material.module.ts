@@ -15,6 +15,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AlertComponent } from './components/alert/alert.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatRippleModule } from '@angular/material/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 const materialModules = [
   MatCardModule,
@@ -31,6 +33,8 @@ const materialModules = [
   MatDialogModule,
   DragDropModule,
   MatSnackBarModule,
+  MatRippleModule,
+  MatProgressBarModule,
 ];
 
 @NgModule({

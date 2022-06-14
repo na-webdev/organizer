@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { TaskInterface } from '../../types/task.interface';
+import { TaskInterface } from '../../../../types/task.interface';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
-import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
+import { EditDialogComponent } from '../edit-task/edit-dialog.component';
 
 @Component({
   selector: 'app-task-item',
@@ -31,7 +31,12 @@ export class TaskItemComponent {
   }
 
   onDelete(): void {
-    let dialogRef = this.dialog.open(DeleteDialogComponent);
+    let dialogRef = this.dialog.open(DeleteDialogComponent, {
+      data: {
+        title: 'Delete task',
+        message: 'Are you sure you want to delete this task?',
+      },
+    });
     dialogRef.afterClosed().subscribe((result) => {
       result && this.deleteTaskEvent.emit(this.task);
     });

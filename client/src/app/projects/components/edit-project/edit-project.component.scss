@@ -1,0 +1,15 @@
+@use "src/sass/mixins.scss" as mixins;
+.edit-project {
+  margin-bottom: 5px;
+  &__row {
+    @include mixins.flex(10px, column, center, stretch);
+  }
+  &__button {
+    padding: 8px 20px;
+    margin-top: -19px;
+  }
+
+  &__field {
+    flex: 1;
+  }
+}

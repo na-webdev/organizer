@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { TaskInterfaceMock } from '../../services/mocks/task-interface.mock';
+import { TaskInterfaceMock } from '../../../../../tasks/services/mocks/task-interface.mock';
 
 import { TaskItemComponent } from './task-item.component';
 

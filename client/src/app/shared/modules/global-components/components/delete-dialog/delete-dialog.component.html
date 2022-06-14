@@ -1,6 +1,6 @@
-<h2 mat-dialog-title>Delete task</h2>
+<h2 mat-dialog-title>{{ data.title }}</h2>
 <mat-dialog-content class="mat-typography">
-  <p>Are you sure to delete this task?</p>
+  <p>{{ data.message }}</p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>

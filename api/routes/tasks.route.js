@@ -7,10 +7,12 @@ const {
   addNewTask,
   updateTask,
   deleteTask,
+  reorderTasks,
 } = require("../controllers/tasks.controller");
 
 router.get("/", getAllTasks);
 router.post("/", taskValidator, addNewTask);
+router.put("/reorder", reorderTasks);
 router.patch("/:id", taskValidator, updateTask);
 router.delete("/:id", deleteTask);
 

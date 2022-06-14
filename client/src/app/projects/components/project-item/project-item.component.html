@@ -1,0 +1,37 @@
+<mat-card class="project-card">
+  <mat-card-header>
+    <mat-card-title
+      ><span (click)="openProject(project)" class="project-card__title">{{
+        project.title
+      }}</span></mat-card-title
+    >
+    <mat-card-subtitle class="project-card__subtitle"
+      >{{
+        project.description.length > 80
+          ? (project.description | slice: 0:80) + ".."
+          : project.description
+      }}
+    </mat-card-subtitle>
+  </mat-card-header>
+  <div class="project-card__footer">
+    <div class="project-card__info">
+      <div class="project-card__completed">
+        <mat-icon>check</mat-icon>{{ completed }}
+      </div>
+      <div class="project-card__waiting">
+        <mat-icon class="material-icons-outlined">watch_later</mat-icon>
+        {{ incomplete }}
+      </div>
+    </div>
+    <div class="project-card__actions">
+      <mat-icon (click)="editProject()">edit</mat-icon>
+      <mat-icon (click)="deleteProject()">delete</mat-icon>
+    </div>
+  </div>
+  <mat-progress-bar
+    *ngIf="completionPercentage > 0"
+    class="project-card__progress"
+    mode="determinate"
+    value="{{ completionPercentage }}"
+  ></mat-progress-bar>
+</mat-card>

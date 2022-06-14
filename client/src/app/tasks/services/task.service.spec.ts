@@ -10,7 +10,6 @@ describe('TaskService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [{ provide: AlertService, useValue: AlertServiceMock }],
     });
     service = TestBed.inject(TaskService);
   });

@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TaskInterface } from '../../types/task.interface';
+import { TaskInterface } from '../../../../types/task.interface';
 
 @Component({
   selector: 'app-edit-dialog',

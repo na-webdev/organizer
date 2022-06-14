@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, take, tap } from 'rxjs';
-import { TaskInterface } from '../types/task.interface';
+import { BehaviorSubject, Observable, take, tap } from 'rxjs';
+import { TaskInterface } from '../../shared/types/task.interface';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { ResponseInterface } from '../types/response.interface';
-import { AlertService } from 'src/app/shared/services/alert.service';
+import { ResponseInterface } from '../../shared/types/response.interface';
 
 const apiUrl = environment.apiUrl;
 
@@ -15,7 +14,7 @@ export class TaskService {
   private tasks: TaskInterface[] = [];
   private tasksUpdated = new BehaviorSubject<TaskInterface[]>(this.tasks);
 
-  constructor(private http: HttpClient, private alertService: AlertService) {}
+  constructor(private http: HttpClient) {}
 
   requestUserTasks(): void {
     this.http
@@ -60,13 +59,16 @@ export class TaskService {
       );
   }
 
-  reorderTasks(tasks: TaskInterface[]): void {
-    const listOfIds = tasks.map((t) => t._id);
+  reorderTasks(
+    tasksToReorder: TaskInterface[],
+    completedTasks: TaskInterface[]
+  ): void {
+    const listOfIds = tasksToReorder.map((t) => t._id);
     this.http
       .put<{ message: string }>(apiUrl + 'tasks/reorder', { listOfIds })
       .pipe(
         tap((res) => {
-          this.tasks = tasks;
+          this.tasks = [...tasksToReorder, ...completedTasks];
           this.tasksUpdated.next(this.tasks);
         })
       )

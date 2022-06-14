@@ -5,6 +5,7 @@ const createError = require("http-errors");
 const getAllTasks = async (req, res, next) => {
   try {
     const tasks = await Task.find({});
+    tasks.sort((a, b) => a.importance - b.importance);
     res.status(200).json(tasks);
   } catch (error) {
     next(error);
@@ -17,8 +18,6 @@ const addNewTask = async (req, res, next) => {
     await newTask.save();
     res.status(201).json({ _id: newTask._id });
   } catch (error) {
-    if (error.isJoi) error.status = 422;
-
     if (error instanceof mongoose.Error.ValidationError) {
       next(createError(422, error.message));
       return;
@@ -54,6 +53,18 @@ const updateTask = async (req, res, next) => {
   }
 };
 
+const reorderTasks = async (req, res, next) => {
+  try {
+    const { listOfIds } = req.body;
+    listOfIds.forEach(async (_id, index) => {
+      await Task.findByIdAndUpdate(_id, { importance: index });
+    });
+    res.status(200).json({ message: "Tasks reordered" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const deleteTask = async (req, res, next) => {
   try {
     const task = await Task.findByIdAndDelete(req.params.id);
@@ -78,4 +89,5 @@ module.exports = {
   addNewTask,
   updateTask,
   deleteTask,
+  reorderTasks,
 };
