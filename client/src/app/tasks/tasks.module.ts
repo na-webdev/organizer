@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { TasksComponent } from './components/tasks/tasks.component';
 import { MaterialModule } from '../shared/modules/material/material.module';
 import { GlobalComponentsModule } from '../shared/modules/global-components/global-components.module';
+import { TasksComponent } from '../shared/modules/global-components/components/tasks/tasks.component';
 
 const routes: Routes = [
   {
@@ -25,6 +25,5 @@ const routes: Routes = [
     GlobalComponentsModule,
   ],
   exports: [RouterModule],
-  declarations: [TasksComponent],
 })
 export class TasksModule {}

@@ -1,16 +1,19 @@
 <mat-card class="project-card">
   <mat-card-header>
-    <mat-card-title
-      ><span (click)="openProject(project)" class="project-card__title">{{
-        project.title
-      }}</span></mat-card-title
+    <mat-card-title>
+      <span
+        [title]="project.title"
+        (click)="openProject(project)"
+        class="project-card__title"
+      >
+        {{ project.title | truncate: 90 }}
+      </span>
+    </mat-card-title>
+    <mat-card-subtitle
+      [title]="project.description"
+      class="project-card__subtitle"
     >
-    <mat-card-subtitle class="project-card__subtitle"
-      >{{
-        project.description.length > 80
-          ? (project.description | slice: 0:80) + ".."
-          : project.description
-      }}
+      {{ project.description | truncate: 90 }}
     </mat-card-subtitle>
   </mat-card-header>
   <div class="project-card__footer">

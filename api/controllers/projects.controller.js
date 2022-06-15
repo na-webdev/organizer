@@ -13,6 +13,22 @@ const getAllProjects = async (req, res, next) => {
   }
 };
 
+const getProjectById = async (req, res, next) => {
+  try {
+    const project = await Project.findOne({ _id: req.params.id }).populate({
+      path: "tasks",
+    });
+    project.tasks.sort((a, b) => a.importance - b.importance);
+    if (!project) {
+      throw createError(404, "Project not found");
+    }
+
+    res.status(200).json(project);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const addNewProject = async (req, res, next) => {
   try {
     const newProject = new Project(req.body);
@@ -24,6 +40,47 @@ const addNewProject = async (req, res, next) => {
       return;
     }
 
+    next(error);
+  }
+};
+
+const addTaskToProject = async (req, res, next) => {
+  try {
+    const project = await Project.findOneAndUpdate(
+      { _id: req.params.id },
+      { $push: { tasks: req.body.taskId } },
+      {
+        new: true,
+      }
+    );
+
+    if (!project) {
+      throw createError(404, "Project not found");
+    }
+
+    res.status(200).json({ _id: project._id });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteTaskFromProject = async (req, res, next) => {
+  try {
+    const project = await Project.findOneAndUpdate(
+      { _id: req.params.id },
+      { $pull: { tasks: req.body.taskId } },
+      {
+        new: true,
+      }
+    );
+
+    if (!project) {
+      console.log("Project not found delete from project");
+      throw createError(404, "Project not found");
+    }
+
+    res.status(200).json({ _id: project._id });
+  } catch (error) {
     next(error);
   }
 };
@@ -82,4 +139,7 @@ module.exports = {
   addNewProject,
   updateProject,
   deleteProject,
+  getProjectById,
+  addTaskToProject,
+  deleteTaskFromProject,
 };

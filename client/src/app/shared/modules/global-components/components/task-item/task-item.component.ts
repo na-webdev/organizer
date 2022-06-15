@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { TaskInterface } from '../../../../types/task.interface';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { EditDialogComponent } from '../edit-task/edit-dialog.component';
@@ -10,13 +11,15 @@ import { EditDialogComponent } from '../edit-task/edit-dialog.component';
   styleUrls: ['./task-item.component.scss'],
 })
 export class TaskItemComponent {
+  @Input() mode!: boolean;
   @Input() task!: TaskInterface;
   @Output() updateTaskEvent: EventEmitter<TaskInterface> = new EventEmitter();
   @Output() deleteTaskEvent: EventEmitter<TaskInterface> = new EventEmitter();
   @Output() completeTaskEvent: EventEmitter<TaskInterface> = new EventEmitter();
   isEditMode: boolean = false;
+  projectTitle!: string | undefined;
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private _router: Router) {}
 
   onEdit(): void {
     let dialogRef = this.dialog.open(EditDialogComponent, {
@@ -44,5 +47,9 @@ export class TaskItemComponent {
 
   onComplete(): void {
     this.completeTaskEvent.emit(this.task);
+  }
+
+  openProject(): void {
+    this._router.navigate(['/projects', this.task.projectRef?._id]);
   }
 }

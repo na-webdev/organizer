@@ -14,7 +14,7 @@ const taskSchema = new Schema({
   importance: {
     type: Number,
   },
-  project: {
+  projectRef: {
     type: Schema.Types.ObjectId,
     ref: "Project",
   },

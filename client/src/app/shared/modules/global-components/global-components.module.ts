@@ -6,12 +6,16 @@ import { MaterialModule } from '../material/material.module';
 import { TaskItemComponent } from './components/task-item/task-item.component';
 import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
 import { EditDialogComponent } from './components/edit-task/edit-dialog.component';
+import { TasksComponent } from './components/tasks/tasks.component';
+import { TruncatePipe } from '../../pipes/truncate.pipe';
 
 const components = [
   AddTaskComponent,
   TaskItemComponent,
   DeleteDialogComponent,
   EditDialogComponent,
+  TasksComponent,
+  TruncatePipe,
 ];
 
 @NgModule({

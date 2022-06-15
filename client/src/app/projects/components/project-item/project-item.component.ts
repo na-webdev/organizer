@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DeleteDialogComponent } from 'src/app/shared/modules/global-components/components/delete-dialog/delete-dialog.component';
 import { TaskInterface } from 'src/app/shared/types/task.interface';
+import { ProjectService } from '../../services/project.service';
 import { ProjectInterface } from '../../types/project.interface';
 import { EditProjectComponent } from '../edit-project/edit-project.component';
 
@@ -21,7 +22,11 @@ export class ProjectItemComponent implements OnInit {
   incomplete: number = 0;
   completionPercentage: number = 0;
 
-  constructor(private _router: Router, public dialog: MatDialog) {}
+  constructor(
+    private _router: Router,
+    public dialog: MatDialog,
+    private projectService: ProjectService
+  ) {}
 
   ngOnInit(): void {
     this.project!.tasks?.forEach((task: TaskInterface) => {
@@ -37,7 +42,6 @@ export class ProjectItemComponent implements OnInit {
   }
 
   openProject(project: ProjectInterface): void {
-    console.log(project);
     this._router.navigate(['/projects', project._id]);
   }
 

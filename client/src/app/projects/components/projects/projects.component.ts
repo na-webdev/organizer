@@ -57,11 +57,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.projectsSubscription = this.projectService.getAllProjects().subscribe(
       (projects) => {
         this.projects = projects;
-        console.log(this.projects);
       },
-      (error) => {
-        console.log(error);
-      }
+      (error) => {}
     );
   }
 }

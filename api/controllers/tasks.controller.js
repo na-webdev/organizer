@@ -4,7 +4,10 @@ const createError = require("http-errors");
 
 const getAllTasks = async (req, res, next) => {
   try {
-    const tasks = await Task.find({});
+    const tasks = await Task.find({}).populate({
+      path: "projectRef",
+      ref: "Project",
+    });
     tasks.sort((a, b) => a.importance - b.importance);
     res.status(200).json(tasks);
   } catch (error) {
@@ -73,7 +76,7 @@ const deleteTask = async (req, res, next) => {
       throw createError(404, "Task not found");
     }
 
-    res.status(200).json({ _id: task._id });
+    res.status(200).json({ _id: req.params.id });
   } catch (error) {
     if (error instanceof mongoose.Error.CastError) {
       next(createError(422, "Invalid id"));

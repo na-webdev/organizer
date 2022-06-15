@@ -4,5 +4,5 @@ export interface ProjectInterface {
   _id?: string;
   title: string;
   description: string;
-  tasks?: TaskInterface[];
+  tasks: TaskInterface[];
 }

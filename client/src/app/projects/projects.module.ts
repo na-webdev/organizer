@@ -7,8 +7,9 @@ import { ProjectItemComponent } from './components/project-item/project-item.com
 import { MaterialModule } from '../shared/modules/material/material.module';
 import { AddProjectComponent } from './components/add-project/add-project.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ProjectDetailComponent } from './components/project-detail/project-detail.component';
+
 import { EditProjectComponent } from './components/edit-project/edit-project.component';
+import { TasksComponent } from '../shared/modules/global-components/components/tasks/tasks.component';
 
 const routes = [
   {
@@ -20,7 +21,7 @@ const routes = [
       },
       {
         path: ':id',
-        component: ProjectDetailComponent,
+        component: TasksComponent,
       },
     ],
   },
@@ -31,7 +32,6 @@ const routes = [
     ProjectsComponent,
     ProjectItemComponent,
     AddProjectComponent,
-    ProjectDetailComponent,
     EditProjectComponent,
   ],
   imports: [

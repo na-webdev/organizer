@@ -23,7 +23,6 @@ export class ProjectService {
       .get<ProjectInterface[]>(apiUrl + 'projects')
       .pipe(
         tap((projects: ProjectInterface[]) => {
-          console.log('PROJECTS', projects);
           this.projects = projects;
           this.projectsUpdated.next(this.projects);
         }),
@@ -34,6 +33,10 @@ export class ProjectService {
 
   getAllProjects(): Observable<ProjectInterface[]> {
     return this.projectsUpdated.asObservable();
+  }
+
+  getProjectById(projectId: string | null): Observable<ProjectInterface> {
+    return this.http.get<ProjectInterface>(apiUrl + 'projects/' + projectId);
   }
 
   addNewProject(project: ProjectInterface): Observable<ResponseInterface> {
@@ -50,7 +53,6 @@ export class ProjectService {
       .patch<ResponseInterface>(apiUrl + 'projects/' + project._id, {
         title: project.title,
         description: project.description,
-        tasks: project.tasks,
       })
       .pipe(
         tap((res) => {

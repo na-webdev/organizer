@@ -17,6 +17,8 @@ import { AlertComponent } from './components/alert/alert.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatRippleModule } from '@angular/material/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatChipsModule } from '@angular/material/chips';
 
 const materialModules = [
   MatCardModule,
@@ -35,6 +37,8 @@ const materialModules = [
   MatSnackBarModule,
   MatRippleModule,
   MatProgressBarModule,
+  MatProgressSpinnerModule,
+  MatChipsModule,
 ];
 
 @NgModule({
