@@ -3,17 +3,17 @@ const router = express.Router();
 const projectValidator = require("../middlewares/validators/project.validator");
 
 const {
-  getAllProjects,
+  getUserProjects,
   addNewProject,
   updateProject,
   deleteProject,
-  getProjectById,
+  getProjectWithTasks,
   addTaskToProject,
   deleteTaskFromProject,
 } = require("../controllers/projects.controller");
 
-router.get("/", getAllProjects);
-router.get("/:id", getProjectById);
+router.get("/", getUserProjects);
+router.get("/:id", getProjectWithTasks);
 router.post("/", projectValidator, addNewProject);
 router.patch("/:id/new-task", addTaskToProject);
 router.patch("/:id/delete-task", deleteTaskFromProject);

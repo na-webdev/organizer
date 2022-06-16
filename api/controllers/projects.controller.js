@@ -1,24 +1,20 @@
 const mongoose = require("mongoose");
 const createError = require("http-errors");
-const Project = require("../models/project.model");
-const Task = require("../models/task.model");
+const ProjectService = require("../services/project.service");
+const TaskService = require("../services/task.service");
 
-const getAllProjects = async (req, res, next) => {
+const getUserProjects = async (req, res, next) => {
   try {
-    const projects = await Project.find({}).populate({
-      path: "tasks",
-    });
+    const projects = await ProjectService.getAllProjects();
     res.status(200).json(projects);
   } catch (error) {
     next(error);
   }
 };
 
-const getProjectById = async (req, res, next) => {
+const getProjectWithTasks = async (req, res, next) => {
   try {
-    const project = await Project.findOne({ _id: req.params.id }).populate({
-      path: "tasks",
-    });
+    const project = await ProjectService.getProjectWithTasks(req.params.id);
     project.tasks.sort((a, b) => a.importance - b.importance);
     if (!project) {
       throw createError(404, "Project not found");
@@ -32,8 +28,7 @@ const getProjectById = async (req, res, next) => {
 
 const addNewProject = async (req, res, next) => {
   try {
-    const newProject = new Project(req.body);
-    await newProject.save();
+    const newProject = await ProjectService.createNewProject(req.body);
     res.status(201).json({ _id: newProject._id });
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {
@@ -47,12 +42,9 @@ const addNewProject = async (req, res, next) => {
 
 const addTaskToProject = async (req, res, next) => {
   try {
-    const project = await Project.findOneAndUpdate(
-      { _id: req.params.id },
-      { $push: { tasks: req.body.taskId } },
-      {
-        new: true,
-      }
+    const project = await ProjectService.addTaskToProject(
+      req.params.id,
+      req.body.taskId
     );
 
     if (!project) {
@@ -67,16 +59,12 @@ const addTaskToProject = async (req, res, next) => {
 
 const deleteTaskFromProject = async (req, res, next) => {
   try {
-    const project = await Project.findOneAndUpdate(
-      { _id: req.params.id },
-      { $pull: { tasks: req.body.taskId } },
-      {
-        new: true,
-      }
+    const project = await ProjectService.deleteTaskFromProject(
+      req.params.id,
+      req.body.taskId
     );
 
     if (!project) {
-      console.log("Project not found delete from project");
       throw createError(404, "Project not found");
     }
 
@@ -88,13 +76,7 @@ const deleteTaskFromProject = async (req, res, next) => {
 
 const updateProject = async (req, res, next) => {
   try {
-    const project = await Project.findOneAndUpdate(
-      { _id: req.params.id },
-      req.body,
-      {
-        new: true,
-      }
-    );
+    const project = await ProjectService.updateProject(req.params.id, req.body);
 
     if (!project) {
       throw createError(404, "Project not found");
@@ -118,17 +100,17 @@ const updateProject = async (req, res, next) => {
 
 const deleteProject = async (req, res, next) => {
   try {
-    const project = await Project.findOne({ _id: req.params.id });
+    const project = await ProjectService.getProjectById(req.params.id);
 
     if (!project) {
       throw createError(404, "Project not found");
     }
 
     for (let i = 0; i < project.tasks.length; i++) {
-      await Task.findOneAndDelete({ _id: project.tasks[i] });
+      await TaskService.deleteTask(project.tasks[i]);
     }
 
-    await project.remove();
+    await ProjectService.deleteProject(req.params.id);
 
     res.status(200).json({ _id: req.params.id });
   } catch (error) {
@@ -142,11 +124,11 @@ const deleteProject = async (req, res, next) => {
 };
 
 module.exports = {
-  getAllProjects,
+  getUserProjects,
   addNewProject,
   updateProject,
   deleteProject,
-  getProjectById,
+  getProjectWithTasks,
   addTaskToProject,
   deleteTaskFromProject,
 };

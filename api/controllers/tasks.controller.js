@@ -1,13 +1,11 @@
 const mongoose = require("mongoose");
-const Task = require("../models/task.model.js");
 const createError = require("http-errors");
+const TaskService = require("../services/task.service.js");
 
-const getAllTasks = async (req, res, next) => {
+const getUserTasks = async (req, res, next) => {
   try {
-    const tasks = await Task.find({}).populate({
-      path: "projectRef",
-      ref: "Project",
-    });
+    const tasks = await TaskService.getAllTasks();
+
     tasks.sort((a, b) => a.importance - b.importance);
     res.status(200).json(tasks);
   } catch (error) {
@@ -17,8 +15,8 @@ const getAllTasks = async (req, res, next) => {
 
 const addNewTask = async (req, res, next) => {
   try {
-    const newTask = new Task(req.body);
-    await newTask.save();
+    const newTask = await TaskService.createNewTask(req.body);
+
     res.status(201).json({ _id: newTask._id });
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {
@@ -32,15 +30,13 @@ const addNewTask = async (req, res, next) => {
 
 const updateTask = async (req, res, next) => {
   try {
-    const task = await Task.findOneAndUpdate({ _id: req.params.id }, req.body, {
-      new: true,
-    });
+    const updatedTask = TaskService.updateTask(req.params.id, req.body);
 
-    if (!task) {
+    if (!updatedTask) {
       throw createError(404, "Task not found");
     }
 
-    res.status(200).json({ _id: task._id });
+    res.status(200).json({ _id: updatedTask._id });
   } catch (error) {
     if (error instanceof mongoose.Error.CastError) {
       next(createError(422, "Invalid id"));
@@ -60,7 +56,7 @@ const reorderTasks = async (req, res, next) => {
   try {
     const { listOfIds } = req.body;
     listOfIds.forEach(async (_id, index) => {
-      await Task.findByIdAndUpdate(_id, { importance: index });
+      await TaskService.updateTask(_id, { importance: index });
     });
     res.status(200).json({ message: "Tasks reordered" });
   } catch (error) {
@@ -70,7 +66,7 @@ const reorderTasks = async (req, res, next) => {
 
 const deleteTask = async (req, res, next) => {
   try {
-    const task = await Task.findByIdAndDelete(req.params.id);
+    const task = await TaskService.deleteTask(req.params.id);
 
     if (!task) {
       throw createError(404, "Task not found");
@@ -88,7 +84,7 @@ const deleteTask = async (req, res, next) => {
 };
 
 module.exports = {
-  getAllTasks,
+  getUserTasks,
   addNewTask,
   updateTask,
   deleteTask,
