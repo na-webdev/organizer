@@ -41,8 +41,6 @@ export class TasksComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.tasksSubscription.unsubscribe();
-    this.taskService.setTasks([]);
-    this.projectMode = 'pending';
   }
 
   getProjectData(): void {

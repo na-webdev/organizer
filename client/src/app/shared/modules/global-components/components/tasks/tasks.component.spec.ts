@@ -7,6 +7,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 import { TasksComponent } from './tasks.component';
 import { TaskServiceMock } from '../../../../../tasks/services/mocks/task-service.mock';
 import { AlertServiceMock } from 'src/app/shared/services/mocks/alert-service.mock';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('TasksComponent', () => {
   let component: TasksComponent;
@@ -14,7 +15,7 @@ describe('TasksComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, RouterTestingModule],
       declarations: [TasksComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [

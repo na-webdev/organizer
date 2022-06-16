@@ -2,6 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { RouterTestingModule } from '@angular/router/testing';
 import { TaskInterfaceMock } from '../../../../../tasks/services/mocks/task-interface.mock';
 
 import { TaskItemComponent } from './task-item.component';
@@ -12,7 +13,7 @@ describe('TaskItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, RouterTestingModule],
       declarations: [TaskItemComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [{ provide: MatDialog, useValue: {} }],
