@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProjectInterface } from '../../types/project.interface';
@@ -8,10 +8,8 @@ import { ProjectInterface } from '../../types/project.interface';
   templateUrl: './edit-project.component.html',
   styleUrls: ['./edit-project.component.scss'],
 })
-export class EditProjectComponent implements OnInit {
+export class EditProjectComponent {
   constructor(@Inject(MAT_DIALOG_DATA) private project: ProjectInterface) {}
-
-  ngOnInit(): void {}
 
   editProjectForm: FormGroup = new FormGroup({
     title: new FormControl(this.project.title, [Validators.minLength(3)]),

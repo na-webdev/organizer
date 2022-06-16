@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const createError = require("http-errors");
 const Project = require("../models/project.model");
+const Task = require("../models/task.model");
 
 const getAllProjects = async (req, res, next) => {
   try {
@@ -117,13 +118,19 @@ const updateProject = async (req, res, next) => {
 
 const deleteProject = async (req, res, next) => {
   try {
-    const project = await Project.findOneAndDelete({ _id: req.params.id });
+    const project = await Project.findOne({ _id: req.params.id });
 
     if (!project) {
       throw createError(404, "Project not found");
     }
 
-    res.status(200).json({ _id: project._id });
+    for (let i = 0; i < project.tasks.length; i++) {
+      await Task.findOneAndDelete({ _id: project.tasks[i] });
+    }
+
+    await project.remove();
+
+    res.status(200).json({ _id: req.params.id });
   } catch (error) {
     if (error instanceof mongoose.Error.CastError) {
       next(createError(422, "Invalid id"));

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -6,7 +6,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   templateUrl: './add-project.component.html',
   styleUrls: ['./add-project.component.scss'],
 })
-export class AddProjectComponent implements OnInit {
+export class AddProjectComponent {
   addProjectForm: FormGroup = new FormGroup({
     title: new FormControl('', [Validators.minLength(3)]),
     description: new FormControl('', [
@@ -16,8 +16,6 @@ export class AddProjectComponent implements OnInit {
   });
 
   constructor() {}
-
-  ngOnInit(): void {}
 
   getTitleError(): string {
     return this.addProjectForm.get('title')!.errors?.['minlength']
