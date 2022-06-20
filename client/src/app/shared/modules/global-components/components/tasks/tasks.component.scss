@@ -1,0 +1,69 @@
+@use "src/sass/variables" as vars;
+.accordion {
+  margin-top: 20px !important;
+  display: block;
+}
+
+.message {
+  margin-top: 50px !important;
+  text-align: center;
+
+  mat-icon {
+    font-size: 48px;
+    margin-left: -20px;
+  }
+}
+
+.mat-card {
+  padding: vars.$secondaryPadding;
+}
+
+.title {
+  margin-bottom: 0;
+}
+
+.sub-title {
+  margin-bottom: 16px;
+  color: grey;
+}
+
+.example-list {
+  min-height: 60px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.example-box {
+  padding: 8px 4px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: move;
+  font-size: 14px;
+}
+
+.example-box.completed {
+  cursor: auto;
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.example-box:last-child {
+  border: none;
+}
+
+.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}

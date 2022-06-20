@@ -1,0 +1,47 @@
+<h2 mat-dialog-title>Add project</h2>
+<mat-dialog-content class="mat-typography">
+  <form
+    autocomplete="off"
+    [formGroup]="addProjectForm"
+    class="add-project"
+    id="project-form"
+  >
+    <div class="add-project__row">
+      <mat-form-field class="add-project__field" appearance="outline">
+        <mat-label>Project title</mat-label>
+        <input formControlName="title" class="add-project__input" matInput />
+        <mat-error *ngIf="addProjectForm.invalid">{{
+          getTitleError()
+        }}</mat-error>
+      </mat-form-field>
+      <mat-form-field class="add-project__field" appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea
+          formControlName="description"
+          class="add-project__input"
+          matInput
+        ></textarea>
+        <mat-error *ngIf="addProjectForm.invalid">{{
+          getDescriptionError()
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    [disabled]="
+      addProjectForm.invalid ||
+      !addProjectForm.value.title ||
+      !addProjectForm.value.description
+    "
+    mat-button
+    [mat-dialog-close]="{
+      newProject: addProjectForm.value
+    }"
+    form="project-form"
+  >
+    Add
+  </button>
+</mat-dialog-actions>

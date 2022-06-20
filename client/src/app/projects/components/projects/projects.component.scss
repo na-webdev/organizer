@@ -1,0 +1,27 @@
+@use "src/sass/variables.scss" as vars;
+@use "src/sass/mixins.scss" as mixins;
+
+.projects-header {
+  @include mixins.flex(15px, row, space-between, center);
+  margin-bottom: 16px;
+  margin-top: -4px;
+}
+
+.project-list {
+  @include mixins.flex(20px);
+}
+
+.project-item {
+  flex: 1;
+  // border: 1px solid red;
+  height: 200px;
+  @include mixins.flex(15px, column, space-between, stretch);
+}
+
+.projects-title {
+  margin: 0;
+}
+
+.add-project {
+  @include mixins.flex(15px, row, center, center);
+}

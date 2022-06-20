@@ -6,6 +6,7 @@ const cors = require("cors");
 const createError = require("http-errors");
 
 const tasksRouter = require("./api/routes/tasks.route.js");
+const projectsRouter = require("./api/routes/projects.route.js");
 
 dotenv.config();
 mongoose.connect(
@@ -25,6 +26,7 @@ app.use(morgan("dev"));
 
 // routes
 app.use("/tasks", tasksRouter);
+app.use("/projects", projectsRouter);
 
 // error handling
 app.use((req, res, next) => {

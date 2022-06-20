@@ -1,0 +1,44 @@
+<h2 mat-dialog-title>Edit project</h2>
+<mat-dialog-content class="mat-typography">
+  <form
+    autocomplete="off"
+    [formGroup]="editProjectForm"
+    class="edit-project"
+    id="project-form"
+  >
+    <div class="edit-project__row">
+      <mat-form-field class="edit-project__field" appearance="outline">
+        <mat-label>Project title</mat-label>
+        <input formControlName="title" class="edit-project__input" matInput />
+        <mat-error *ngIf="editProjectForm.invalid">{{
+          getTitleError()
+        }}</mat-error>
+      </mat-form-field>
+      <mat-form-field class="edit-project__field" appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea
+          formControlName="description"
+          class="edit-project__input"
+          matInput
+        ></textarea>
+        <mat-error *ngIf="editProjectForm.invalid">{{
+          getDescriptionError()
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    [disabled]="
+      editProjectForm.invalid ||
+      !editProjectForm.value.title ||
+      !editProjectForm.value.description
+    "
+    mat-button
+    [mat-dialog-close]="{ updatedProject: editProjectForm.value }"
+  >
+    Save
+  </button>
+</mat-dialog-actions>

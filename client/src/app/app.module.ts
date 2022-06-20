@@ -8,6 +8,8 @@ import { LayoutModule } from './layout/layout.module';
 import { TasksModule } from './tasks/tasks.module';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { ProjectsModule } from './projects/projects.module';
+import { TruncatePipe } from './shared/pipes/truncate.pipe';
 
 @NgModule({
   declarations: [AppComponent],
@@ -16,9 +18,10 @@ import { RouterModule } from '@angular/router';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     LayoutModule,
     TasksModule,
-    HttpClientModule,
+    ProjectsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

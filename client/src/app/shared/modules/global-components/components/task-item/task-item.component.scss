@@ -1,0 +1,55 @@
+@use "src/sass/mixins" as mixins;
+@use "src/sass/variables" as vars;
+
+.task-item {
+  transition: all 0.2s ease-in-out;
+  flex: 1;
+  box-shadow: vars.$primaryBoxShadow;
+  padding: vars.$secondaryPadding;
+  border-radius: vars.$primaryRadius;
+  position: relative;
+
+  &__row {
+    @include mixins.flex(10px, row, space-between);
+  }
+
+  &__buttons {
+    visibility: collapse;
+  }
+
+  &__cover {
+    @include mixins.flex(10px, row, space-between);
+  }
+
+  &__button {
+    color: gray;
+  }
+
+  &__text {
+    font-size: 18px;
+    word-wrap: break-word !important;
+  }
+
+  &__label {
+    // place the center
+    position: absolute;
+    top: 17%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.6;
+    font-size: 12px;
+  }
+
+  &__label:hover {
+    cursor: pointer;
+    opacity: 1;
+  }
+
+  &:hover &__buttons {
+    visibility: visible;
+  }
+
+  &:hover {
+    box-shadow: vars.$hoverBoxShadow;
+  }
+}

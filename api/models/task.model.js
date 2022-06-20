@@ -14,6 +14,10 @@ const taskSchema = new Schema({
   importance: {
     type: Number,
   },
+  projectRef: {
+    type: Schema.Types.ObjectId,
+    ref: "Project",
+  },
 });
 
 const Task = mongoose.model("Task", taskSchema);

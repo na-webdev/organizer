@@ -17,6 +17,10 @@ body {
   font-family: "Poppins", sans-serif;
 }
 
+body.theme-dark .active {
+  color: #40c4ff !important;
+}
+
 .mat-drawer-inner-container {
   overflow: hidden !important;
 }

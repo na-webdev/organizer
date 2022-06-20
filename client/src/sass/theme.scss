@@ -12,16 +12,18 @@ $mat-theming-theme: mat-light-theme(
   $mat-theming-warn
 );
 
-$mat-theming-theme-dark: mat-dark-theme(
-  $mat-theming-primary,
-  $mat-theming-accent,
-  $mat-theming-warn
-);
-
-.theme-dark {
-  @include angular-material-theme($mat-theming-theme-dark);
-}
-
 .theme-light {
   @include angular-material-theme($mat-theming-theme);
+}
+
+.theme-dark {
+  $mat-theming-primary: mat-palette($mat-light-blue, A200);
+  $mat-theming-accent: mat-palette($mat-green, 600);
+  $mat-theming-warn: mat-palette($mat-pink, A200);
+  $mat-theming-theme-dark: mat-dark-theme(
+    $mat-theming-primary,
+    $mat-theming-accent,
+    $mat-theming-warn
+  );
+  @include angular-material-theme($mat-theming-theme-dark);
 }
