@@ -1,0 +1,33 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Organizer</mat-card-title>
+    <mat-card-subtitle *ngIf="status === 'confirmed'">
+      <p>
+        Your account successfully activated! You can now sign in to your
+        account.
+      </p>
+      <a [routerLink]="['/sign-in']">Sign in</a>
+    </mat-card-subtitle>
+    <mat-card-subtitle *ngIf="status === 'pending'">
+      <p>
+        Your account is pending activation. Please check your email for the
+        activation link.
+      </p>
+    </mat-card-subtitle>
+    <mat-card-subtitle *ngIf="status === 'error'">
+      <p>There was an error activating your account. Please try again later.</p>
+    </mat-card-subtitle>
+    <mat-card-subtitle *ngIf="status === 'expired'">
+      <p>Your account activation link has expired. Please request a new one.</p>
+      <button
+        (click)="requestNewToken(token)"
+        mat-raised-button
+        color="primary"
+      >
+        Request token
+      </button>
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content> </mat-card-content>
+</mat-card>

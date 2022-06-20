@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AlertService } from 'src/app/shared/services/alert.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -14,12 +16,25 @@ export class SignInComponent implements OnInit {
     password: new FormControl('', [Validators.required]),
   });
 
-  constructor() {}
+  constructor(
+    private authService: AuthService,
+    private alertService: AlertService
+  ) {}
 
   ngOnInit(): void {}
 
   onSubmit(): void {
     console.log(this.signInForm.value);
+    const { email, password } = this.signInForm.value;
+    this.authService.signInUser(email, password).subscribe(
+      (res) => {
+        console.log(res);
+        this.alertService.alertMessage(res.user.username, 'success');
+      },
+      (err) => {
+        this.alertService.alertMessage(err.error.message, 'danger');
+      }
+    );
   }
 
   getEmailError(): string {
