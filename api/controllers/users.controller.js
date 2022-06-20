@@ -28,16 +28,22 @@ const signUpUser = async (req, res, next) => {
       confirmationToken: token,
     });
 
+    await emailService.sendConfirmationEmail(
+      userData.username,
+      userData.email,
+      token
+    );
+
     res.status(201).json({
       message: "Please check your email to confirm your account",
     });
-
-    await emailService.sendConfirmationEmail(username, email, token);
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {
       next(createError(422, error.message));
       return;
     }
+
+    console.log(error);
 
     next(error);
   }

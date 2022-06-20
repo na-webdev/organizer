@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AlertService } from 'src/app/shared/services/alert.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -21,12 +23,24 @@ export class SignUpComponent implements OnInit {
     ]),
   });
 
-  constructor() {}
+  constructor(
+    private authService: AuthService,
+    private alertService: AlertService
+  ) {}
 
   ngOnInit(): void {}
 
   onSubmit(): void {
     console.log(this.signUpForm.value);
+    const { username, email, password } = this.signUpForm.value;
+    this.authService.signUpUser(username, email, password).subscribe(
+      (res) => {
+        this.alertService.alertMessage(res.message, 'success');
+      },
+      (err) => {
+        this.alertService.alertMessage(err.error.message, 'danger');
+      }
+    );
   }
 
   getUsernameError(): string {

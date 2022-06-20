@@ -28,7 +28,7 @@ app.use(morgan("dev"));
 // routes
 app.use("/tasks", tasksRouter);
 app.use("/projects", projectsRouter);
-app.use("users", usersRouter);
+app.use("/users", usersRouter);
 
 // error handling
 app.use((req, res, next) => {
