@@ -3,8 +3,7 @@ const Task = require("../models/task.model.js");
 class TaskService {
   async createNewTask(task) {
     const newTask = new Task(task);
-    await newTask.save();
-    return newTask;
+    return newTask.save();
   }
 
   async getAllTasks() {

@@ -1,0 +1,48 @@
+<mat-card class="sign-up">
+  <h1>Organizer</h1>
+  <form
+    autocomplete="off"
+    (ngSubmit)="onSubmit()"
+    [formGroup]="signUpForm"
+    class="sign-up__form"
+  >
+    <mat-form-field class="sign-up__field" appearance="outline">
+      <mat-label>Username</mat-label>
+      <input formControlName="username" matInput />
+      <mat-error *ngIf="signUpForm.invalid">{{ getUsernameError() }}</mat-error>
+    </mat-form-field>
+    <mat-form-field class="sign-up__field" appearance="outline">
+      <mat-label>Email</mat-label>
+      <input formControlName="email" type="email" matInput />
+      <mat-error *ngIf="signUpForm.invalid">{{ getEmailError() }}</mat-error>
+    </mat-form-field>
+    <mat-form-field class="sign-up__field" appearance="outline">
+      <mat-label>Password</mat-label>
+      <input
+        formControlName="password"
+        matInput
+        [type]="hide ? 'password' : 'text'"
+      />
+      <button
+        mat-icon-button
+        type="button"
+        matSuffix
+        (click)="hide = !hide"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide"
+      >
+        <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+      </button>
+      <mat-error *ngIf="signUpForm.invalid">{{ getPasswordError() }}</mat-error>
+    </mat-form-field>
+
+    <button
+      class="sign-up__button"
+      mat-raised-button
+      color="primary"
+      [disabled]="signUpForm.invalid"
+    >
+      Sign up
+    </button>
+  </form>
+</mat-card>

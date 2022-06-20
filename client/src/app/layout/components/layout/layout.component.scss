@@ -1,4 +1,6 @@
 @use "src/sass/variables.scss" as vars;
+@use "src/sass/mixins.scss" as mixins;
+
 .container {
   display: flex;
   flex-direction: column;
@@ -34,6 +36,7 @@
 }
 
 .mat-list-base {
+  @include mixins.flex(0px, column);
   padding: 12px 0 0 0;
 }
 

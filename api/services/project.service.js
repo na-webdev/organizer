@@ -22,8 +22,7 @@ class ProjectService {
 
   async createNewProject(project) {
     const newProject = new Project(project);
-    await newProject.save();
-    return newProject;
+    return newProject.save();
   }
 
   async addTaskToProject(projectId, taskId) {

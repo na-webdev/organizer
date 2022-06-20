@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
+  Input,
   OnDestroy,
   Renderer2,
 } from '@angular/core';
@@ -60,4 +61,6 @@ export class LayoutComponent implements OnDestroy {
     }
     this.darkTheme = !this.darkTheme;
   }
+
+  signOut() {}
 }
