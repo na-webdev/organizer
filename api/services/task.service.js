@@ -6,8 +6,8 @@ class TaskService {
     return newTask.save();
   }
 
-  async getAllTasks() {
-    const tasks = await Task.find({}).populate({
+  async getUserTasks(userId) {
+    const tasks = await Task.find({ userRef: userId }).populate({
       path: "projectRef",
       ref: "Project",
     });

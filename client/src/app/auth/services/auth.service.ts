@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, take, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { UserInterface } from '../types/user.interface';
 
@@ -68,6 +68,10 @@ export class AuthService {
       .subscribe((res) => {
         this.userData.next(res.user);
       });
+  }
+
+  getUserData(): Observable<UserInterface> {
+    return this.userData.asObservable();
   }
 
   isSignedIn(): boolean {

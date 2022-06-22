@@ -4,7 +4,8 @@ const TaskService = require("../services/task.service.js");
 
 const getUserTasks = async (req, res, next) => {
   try {
-    const tasks = await TaskService.getAllTasks();
+    const userId = req.user._id;
+    const tasks = await TaskService.getUserTasks(userId);
 
     tasks.sort((a, b) => a.importance - b.importance);
     res.status(200).json(tasks);
@@ -15,12 +16,16 @@ const getUserTasks = async (req, res, next) => {
 
 const addNewTask = async (req, res, next) => {
   try {
-    const newTask = await TaskService.createNewTask(req.body);
+    const userId = req.user._id;
+    const newTask = await TaskService.createNewTask({
+      ...req.body,
+      userRef: userId,
+    });
 
     res.status(201).json({ _id: newTask._id });
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {
-      next(createError(422, error.message));
+      next(createError(422, "Invalid data"));
       return;
     }
 
@@ -44,7 +49,7 @@ const updateTask = async (req, res, next) => {
     }
 
     if (error instanceof mongoose.Error.ValidationError) {
-      next(createError(422, error.message));
+      next(createError(422, "Invalid data"));
       return;
     }
 

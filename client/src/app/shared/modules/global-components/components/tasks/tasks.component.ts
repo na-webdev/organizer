@@ -45,7 +45,6 @@ export class TasksComponent implements OnInit, OnDestroy {
 
   getProjectData(): void {
     this.projectId = this.route.snapshot.paramMap.get('id');
-    console.log('GET PROJECT DATA', this.projectId);
     this.projectService
       .getProjectById(this.projectId)
       .pipe(take(1))

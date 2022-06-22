@@ -50,7 +50,11 @@ export class ProjectItemComponent implements OnInit {
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       data: {
         title: 'Delete project',
-        message: 'Are you sure you want to delete this project?',
+        message:
+          'Are you sure you want to delete this project?' +
+          (this.project!.tasks?.length
+            ? ' It will also delete all tasks associated with this project.'
+            : ''),
       },
     });
 

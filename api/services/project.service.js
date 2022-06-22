@@ -1,8 +1,8 @@
 const Project = require("../models/project.model");
 
 class ProjectService {
-  async getAllProjects() {
-    const projects = await Project.find({}).populate({
+  async getUserProjects(userId) {
+    const projects = await Project.find({ userRef: userId }).populate({
       path: "tasks",
     });
     return projects;

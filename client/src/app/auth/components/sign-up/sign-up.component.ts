@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { AuthService } from '../../services/auth.service';
@@ -8,7 +8,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss'],
 })
-export class SignUpComponent implements OnInit {
+export class SignUpComponent {
   hide: boolean = true;
 
   signUpForm: FormGroup = new FormGroup({
@@ -20,6 +20,10 @@ export class SignUpComponent implements OnInit {
     password: new FormControl('', [
       Validators.required,
       Validators.minLength(6),
+      Validators.maxLength(16),
+      Validators.pattern(
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{6,15}$/
+      ),
     ]),
   });
 
@@ -28,10 +32,7 @@ export class SignUpComponent implements OnInit {
     private alertService: AlertService
   ) {}
 
-  ngOnInit(): void {}
-
   onSubmit(): void {
-    console.log(this.signUpForm.value);
     const { username, email, password } = this.signUpForm.value;
     this.authService.signUpUser(username, email, password).subscribe(
       (res) => {
@@ -63,6 +64,18 @@ export class SignUpComponent implements OnInit {
     if (errorObj?.['required']) return 'Password is required';
     if (errorObj?.['minlength'])
       return 'Password must be at least 6 characters';
+    if (errorObj?.['maxlength'])
+      return 'Password must be at most 16 characters';
+    if (errorObj?.['pattern']) {
+      if (!this.signUpForm.get('password')!.value.match(/[a-z]/))
+        return 'Password must contain at least one lowercase letter';
+      if (!this.signUpForm.get('password')!.value.match(/[A-Z]/))
+        return 'Password must contain at least one uppercase letter';
+      if (!this.signUpForm.get('password')!.value.match(/[0-9]/))
+        return 'Password must contain at least one number';
+      if (!this.signUpForm.get('password')!.value.match(/[^a-zA-Z0-9]/))
+        return 'Password must contain at least one special character';
+    }
     return '';
   }
 }

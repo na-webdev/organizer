@@ -8,12 +8,14 @@ const {
   requestNewToken,
   getUserData,
 } = require("../controllers/users.controller");
-const userValidator = require("../middlewares/validators/user.validator");
+const signUpValidator = require("../middlewares/validators/sign-up.validator");
+const signInValidator = require("../middlewares/validators/sign-in.validator");
+const auth = require("../middlewares/guards/auth.guard");
 
-router.post("/sign-up", userValidator, signUpUser);
-router.post("/sign-in", signInUser);
 router.get("/confirm/:token", confirmUser);
+router.get("/user-data", auth, getUserData);
+router.post("/sign-up", signUpValidator, signUpUser);
+router.post("/sign-in", signInValidator, signInUser);
 router.post("/request-new-token", requestNewToken);
-router.get("/user-data", getUserData);
 
 module.exports = router;

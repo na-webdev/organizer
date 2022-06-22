@@ -126,7 +126,8 @@ export class TaskService {
         tap((res) => {
           this.tasks = [...tasksToReorder, ...completedTasks];
           this.tasksUpdated.next(this.tasks);
-        })
+        }),
+        take(1)
       )
       .subscribe();
   }

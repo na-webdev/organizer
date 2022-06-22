@@ -1,6 +1,6 @@
 const passport = require("passport");
 const passportJWT = require("passport-jwt");
-const UserService = require("../services/user.service");
+const UserService = require("../../services/user.service");
 const dotenv = require("dotenv");
 
 const JWTStrategy = passportJWT.Strategy;

@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const bcrypt = require("bcrypt");
-const emailService = require("../services/email.service");
+const EmailService = require("../services/email.service");
 
 dotenv.config();
 
@@ -28,7 +28,7 @@ const signUpUser = async (req, res, next) => {
       confirmationToken: token,
     });
 
-    await emailService.sendConfirmationEmail(
+    await EmailService.sendConfirmationEmail(
       userData.username,
       userData.email,
       token
@@ -38,12 +38,15 @@ const signUpUser = async (req, res, next) => {
       message: "Please check your email to confirm your account",
     });
   } catch (error) {
-    if (error instanceof mongoose.Error.ValidationError) {
-      next(createError(422, error.message));
+    if (error.message.toLowerCase().includes("duplicate key error")) {
+      next(createError(409, "Email already exists"));
       return;
     }
 
-    console.log(error);
+    if (error instanceof mongoose.Error.ValidationError) {
+      next(createError(422, "Invalid data"));
+      return;
+    }
 
     next(error);
   }
@@ -86,10 +89,9 @@ const signInUser = async (req, res, next) => {
     }
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {
-      next(createError(422, error.message));
+      next(createError(422, "Invalid data"));
       return;
     }
-
     next(error);
   }
 };
@@ -141,7 +143,7 @@ const requestNewToken = async (req, res, next) => {
       return;
     }
 
-    await emailService.sendConfirmationEmail(
+    await EmailService.sendConfirmationEmail(
       payload.username,
       payload.email,
       token
@@ -157,10 +159,9 @@ const requestNewToken = async (req, res, next) => {
 
 const getUserData = async (req, res, next) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const payload = jwt.decode(token);
+    const userId = req.user._id;
 
-    const user = await UserService.getUserById(payload._id);
+    const user = await UserService.getUserById(userId);
 
     if (!user) {
       next(createError(404, "Not found"));
