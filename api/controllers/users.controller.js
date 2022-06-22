@@ -71,7 +71,9 @@ const signInUser = async (req, res, next) => {
         username: user.username,
       };
 
-      const token = jwt.sign(payload, process.env.JWT_SECRET);
+      const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRATION_TIME,
+      });
 
       res.status(200).json({
         token,
@@ -117,8 +119,70 @@ const confirmUser = async (req, res, next) => {
   }
 };
 
+const requestNewToken = async (req, res, next) => {
+  try {
+    const { token } = req.body;
+    const payload = jwt.decode(token);
+
+    const newPayload = {
+      email: payload.email,
+      username: payload.username,
+      expiresIn: new Date().getTime() + 1000 * 60 * 60 * 24,
+    };
+
+    const newToken = jwt.sign(newPayload, process.env.JWT_SECRET);
+
+    const user = await UserService.getUserByEmailAndUpdate(payload.email, {
+      confirmationToken: newToken,
+    });
+
+    if (!user) {
+      next(createError(404, "Not found"));
+      return;
+    }
+
+    await emailService.sendConfirmationEmail(
+      payload.username,
+      payload.email,
+      token
+    );
+
+    res.status(200).json({
+      message: "Please check your email to confirm your account",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getUserData = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const payload = jwt.decode(token);
+
+    const user = await UserService.getUserById(payload._id);
+
+    if (!user) {
+      next(createError(404, "Not found"));
+      return;
+    }
+
+    res.status(200).json({
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   signUpUser,
   signInUser,
   confirmUser,
+  requestNewToken,
+  getUserData,
 };

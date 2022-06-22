@@ -7,25 +7,7 @@ import { ProjectItemComponent } from './components/project-item/project-item.com
 import { MaterialModule } from '../shared/modules/material/material.module';
 import { AddProjectComponent } from './components/add-project/add-project.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
 import { EditProjectComponent } from './components/edit-project/edit-project.component';
-import { TasksComponent } from '../shared/modules/global-components/components/tasks/tasks.component';
-
-const routes = [
-  {
-    path: 'projects',
-    children: [
-      {
-        path: '',
-        component: ProjectsComponent,
-      },
-      {
-        path: ':id',
-        component: TasksComponent,
-      },
-    ],
-  },
-];
 
 @NgModule({
   declarations: [
@@ -36,7 +18,7 @@ const routes = [
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes),
+    RouterModule,
     MaterialModule,
     GlobalComponentsModule,
     ReactiveFormsModule,

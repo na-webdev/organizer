@@ -4,13 +4,13 @@ export const menuItems: MenuItem[] = [
   {
     id: 'tasks',
     title: 'Tasks',
-    route: '/tasks',
+    route: './tasks',
     icon: 'check_box',
   },
   {
     id: 'projects',
     title: 'Projects',
-    route: '/projects',
+    route: './projects',
     icon: 'assignment',
   },
 ];

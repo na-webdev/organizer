@@ -21,6 +21,10 @@ class UserService {
       { new: true }
     );
   }
+
+  async getUserByEmailAndUpdate(email, data) {
+    return User.findOneAndUpdate({ email }, data, { new: true });
+  }
 }
 
 module.exports = new UserService();

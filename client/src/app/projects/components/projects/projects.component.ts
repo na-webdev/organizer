@@ -24,6 +24,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    console.log('projects component');
     this.getAllProjects();
   }
 

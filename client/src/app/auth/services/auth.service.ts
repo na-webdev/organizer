@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Router } from '@angular/router';
+import { BehaviorSubject, Observable, take, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { UserInterface } from '../types/user.interface';
 
@@ -15,9 +16,8 @@ export class AuthService {
     username: '',
     email: '',
   });
-  token = new BehaviorSubject<string>('');
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   signUpUser(
     username: string,
@@ -42,10 +42,40 @@ export class AuthService {
       })
       .pipe(
         tap((res) => {
-          this.userData.next(res.user);
-          this.token.next(res.token);
+          this.setSession(res.token, res.user);
         })
       );
+  }
+
+  signOut(): void {
+    this.userData.next({
+      _id: '',
+      username: '',
+      email: '',
+    });
+    localStorage.removeItem('token');
+    this.router.navigate(['/sign-in']);
+  }
+
+  private setSession(token: string, user: UserInterface): void {
+    this.userData.next(user);
+    localStorage.setItem('token', token);
+  }
+
+  requestUserData(): void {
+    this.http
+      .get<{ user: UserInterface }>(apiUrl + 'users/user-data')
+      .subscribe((res) => {
+        this.userData.next(res.user);
+      });
+  }
+
+  isSignedIn(): boolean {
+    return !!localStorage.getItem('token');
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
   }
 
   confirmUser(token: string): Observable<{ message: string }> {

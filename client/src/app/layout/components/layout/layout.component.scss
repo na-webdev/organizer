@@ -17,6 +17,7 @@
 
   &__sidenav-content {
     padding: vars.$primaryPadding;
+    transition: all 0.3s linear;
   }
 
   &__menu-toggle {

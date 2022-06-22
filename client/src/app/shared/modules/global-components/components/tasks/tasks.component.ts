@@ -40,11 +40,12 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.tasksSubscription.unsubscribe();
+    this.tasksSubscription?.unsubscribe();
   }
 
   getProjectData(): void {
     this.projectId = this.route.snapshot.paramMap.get('id');
+    console.log('GET PROJECT DATA', this.projectId);
     this.projectService
       .getProjectById(this.projectId)
       .pipe(take(1))

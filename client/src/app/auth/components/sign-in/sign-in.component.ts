@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -12,13 +13,17 @@ export class SignInComponent implements OnInit {
   hide: boolean = true;
 
   signInForm: FormGroup = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required]),
+    email: new FormControl('nurmatovrahimjon@gmail.com', [
+      Validators.required,
+      Validators.email,
+    ]),
+    password: new FormControl('123456', [Validators.required]),
   });
 
   constructor(
     private authService: AuthService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {}
@@ -28,8 +33,8 @@ export class SignInComponent implements OnInit {
     const { email, password } = this.signInForm.value;
     this.authService.signInUser(email, password).subscribe(
       (res) => {
-        console.log(res);
-        this.alertService.alertMessage(res.user.username, 'success');
+        this.router.navigate(['/']);
+        this.alertService.alertMessage(`Welcome ${res.user.username}!`, 'info');
       },
       (err) => {
         this.alertService.alertMessage(err.error.message, 'danger');

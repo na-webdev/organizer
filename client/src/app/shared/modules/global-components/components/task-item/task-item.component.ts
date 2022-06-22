@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TaskInterface } from '../../../../types/task.interface';
@@ -50,6 +50,6 @@ export class TaskItemComponent {
   }
 
   openProject(): void {
-    this._router.navigate(['/projects', this.task.projectRef?._id]);
+    this._router.navigate(['/home/projects', this.task.projectRef?._id]);
   }
 }

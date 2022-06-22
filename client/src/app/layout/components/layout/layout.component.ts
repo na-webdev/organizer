@@ -5,11 +5,13 @@ import {
   Inject,
   Input,
   OnDestroy,
+  Output,
   Renderer2,
 } from '@angular/core';
 import { MenuItem } from '../../types/menu-item.interface';
 import { menuItems } from './menu-item.config';
 import { DOCUMENT } from '@angular/common';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
   selector: 'app-layout',
@@ -30,6 +32,7 @@ export class LayoutComponent implements OnDestroy {
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
     @Inject(DOCUMENT) private document: Document,
+    private authService: AuthService,
     private renderer: Renderer2
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
@@ -62,5 +65,7 @@ export class LayoutComponent implements OnDestroy {
     this.darkTheme = !this.darkTheme;
   }
 
-  signOut() {}
+  signOutUser() {
+    this.authService.signOut();
+  }
 }
