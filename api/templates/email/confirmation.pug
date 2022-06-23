@@ -1,0 +1,7 @@
+extends layout.pug 
+
+block content
+  p Hello, #{data.username}
+  p Please, activate your account by clicking on the link below:
+  p
+    a(href=`${data.baseUrl}/confirm/${data.confirmationToken}`) Activate

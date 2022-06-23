@@ -21,7 +21,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 export class LayoutComponent implements OnDestroy {
   mobileQuery: MediaQueryList;
   isMenuOpen: boolean = true;
-  darkTheme: boolean = false;
+  darkTheme: boolean = localStorage.getItem('darkTheme') === 'true';
 
   menuItems: MenuItem[] = menuItems;
   contentMargin = 200;
@@ -56,9 +56,11 @@ export class LayoutComponent implements OnDestroy {
 
   toggleTheme(): void {
     if (!this.darkTheme) {
+      localStorage.setItem('darkTheme', 'true');
       this.renderer.removeClass(this.document.body, 'theme-light');
       this.renderer.addClass(this.document.body, 'theme-dark');
     } else {
+      localStorage.setItem('darkTheme', 'false');
       this.renderer.removeClass(this.document.body, 'theme-dark');
       this.renderer.addClass(this.document.body, 'theme-light');
     }

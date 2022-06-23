@@ -28,10 +28,14 @@ const signUpUser = async (req, res, next) => {
       confirmationToken: token,
     });
 
-    await EmailService.sendConfirmationEmail(
-      userData.username,
+    await EmailService.sendEmailTo(
       userData.email,
-      token
+      "Email confirmation and account activation",
+      {
+        username: userData.username,
+        confirmationToken: token,
+      },
+      "confirmation"
     );
 
     res.status(201).json({
@@ -58,7 +62,7 @@ const signInUser = async (req, res, next) => {
     const user = await UserService.getUserByEmail(userData.email);
 
     if (!user) {
-      next(createError(404, "User not found"));
+      next(createError(404, "Email or password incorrect"));
       return;
     }
 
@@ -86,6 +90,8 @@ const signInUser = async (req, res, next) => {
           email: user.email,
         },
       });
+    } else {
+      next(createError(401, "Email or password is incorrect"));
     }
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {
