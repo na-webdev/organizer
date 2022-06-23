@@ -149,10 +149,14 @@ const requestNewToken = async (req, res, next) => {
       return;
     }
 
-    await EmailService.sendConfirmationEmail(
-      payload.username,
-      payload.email,
-      token
+    await EmailService.sendEmailTo(
+      user.email,
+      "Email confirmation and account activation",
+      {
+        username: user.username,
+        confirmationToken: newToken,
+      },
+      "confirmation"
     );
 
     res.status(200).json({

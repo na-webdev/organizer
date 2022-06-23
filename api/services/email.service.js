@@ -18,20 +18,6 @@ class EmailService {
     this.transporter = transporter;
   }
 
-  async sendConfirmationEmail(name, email, confirmationToken) {
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Confirm your account",
-      html: `<h1>Organizer</h1>
-      <h4>Hello ${name}</h4>
-      <p>Please confirm your account by clicking the link below:</p>
-      <a href="${process.env.BASE_URL}/confirm/${confirmationToken}">Confirm</a>`,
-    };
-
-    return this.transporter.sendMail(mailOptions);
-  }
-
   async sendEmailTo(email, subject, data, template) {
     const Template = path.join(__dirname, "../templates/email");
 
