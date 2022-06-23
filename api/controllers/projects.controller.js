@@ -16,7 +16,6 @@ const getUserProjects = async (req, res, next) => {
 const getProjectWithTasks = async (req, res, next) => {
   try {
     const project = await ProjectService.getProjectWithTasks(req.params.id);
-    project.tasks.sort((a, b) => a.importance - b.importance);
     if (!project) {
       throw createError(404, "Project not found");
     }

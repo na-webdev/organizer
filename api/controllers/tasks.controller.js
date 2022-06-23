@@ -7,7 +7,6 @@ const getUserTasks = async (req, res, next) => {
     const userId = req.user._id;
     const tasks = await TaskService.getUserTasks(userId);
 
-    tasks.sort((a, b) => a.importance - b.importance);
     res.status(200).json(tasks);
   } catch (error) {
     next(error);

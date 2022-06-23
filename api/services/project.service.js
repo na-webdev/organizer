@@ -11,6 +11,7 @@ class ProjectService {
   async getProjectWithTasks(id) {
     const project = await Project.findOne({ _id: id }).populate({
       path: "tasks",
+      options: { sort: { importance: 1 } },
     });
     return project;
   }

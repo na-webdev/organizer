@@ -7,10 +7,12 @@ class TaskService {
   }
 
   async getUserTasks(userId) {
-    const tasks = await Task.find({ userRef: userId }).populate({
-      path: "projectRef",
-      ref: "Project",
-    });
+    const tasks = await Task.find({ userRef: userId })
+      .sort({ importance: 1 })
+      .populate({
+        path: "projectRef",
+        ref: "Project",
+      });
     return tasks;
   }
 
