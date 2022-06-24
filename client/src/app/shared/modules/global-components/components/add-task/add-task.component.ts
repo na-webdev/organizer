@@ -14,8 +14,6 @@ export class AddTaskComponent {
     title: new FormControl('', [Validators.minLength(3)]),
   });
 
-  constructor() {}
-
   onSubmit(): void {
     if (this.addTaskForm.get('title')?.value) {
       const { title } = this.addTaskForm.value;

@@ -3,15 +3,16 @@ const Task = require("../models/task.model.js");
 class TaskService {
   async createNewTask(task) {
     const newTask = new Task(task);
-    await newTask.save();
-    return newTask;
+    return newTask.save();
   }
 
-  async getAllTasks() {
-    const tasks = await Task.find({}).populate({
-      path: "projectRef",
-      ref: "Project",
-    });
+  async getUserTasks(userId) {
+    const tasks = await Task.find({ userRef: userId })
+      .sort({ importance: 1 })
+      .populate({
+        path: "projectRef",
+        ref: "Project",
+      });
     return tasks;
   }
 

@@ -4,9 +4,12 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const createError = require("http-errors");
+const passport = require("passport");
 
 const tasksRouter = require("./api/routes/tasks.route.js");
 const projectsRouter = require("./api/routes/projects.route.js");
+const usersRouter = require("./api/routes/users.route.js");
+const auth = require("./api/middlewares/guards/auth.guard");
 
 dotenv.config();
 mongoose.connect(
@@ -23,10 +26,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
+app.use(passport.initialize());
 
 // routes
-app.use("/tasks", tasksRouter);
-app.use("/projects", projectsRouter);
+app.use("/tasks", auth, tasksRouter);
+app.use("/projects", auth, projectsRouter);
+app.use("/users", usersRouter);
 
 // error handling
 app.use((req, res, next) => {

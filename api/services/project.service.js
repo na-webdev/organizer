@@ -1,8 +1,8 @@
 const Project = require("../models/project.model");
 
 class ProjectService {
-  async getAllProjects() {
-    const projects = await Project.find({}).populate({
+  async getUserProjects(userId) {
+    const projects = await Project.find({ userRef: userId }).populate({
       path: "tasks",
     });
     return projects;
@@ -11,6 +11,7 @@ class ProjectService {
   async getProjectWithTasks(id) {
     const project = await Project.findOne({ _id: id }).populate({
       path: "tasks",
+      options: { sort: { importance: 1 } },
     });
     return project;
   }
@@ -22,8 +23,7 @@ class ProjectService {
 
   async createNewProject(project) {
     const newProject = new Project(project);
-    await newProject.save();
-    return newProject;
+    return newProject.save();
   }
 
   async addTaskToProject(projectId, taskId) {

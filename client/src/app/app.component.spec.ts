@@ -2,6 +2,8 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { AuthService } from './auth/services/auth.service';
+import { AuthServiceMock } from './auth/services/mocks/auth-service.mock';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -9,6 +11,7 @@ describe('AppComponent', () => {
       imports: [RouterTestingModule],
       declarations: [AppComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      providers: [{ provide: AuthService, useValue: AuthServiceMock }],
     }).compileComponents();
   });
 

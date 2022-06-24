@@ -1,4 +1,6 @@
 @use "src/sass/variables.scss" as vars;
+@use "src/sass/mixins.scss" as mixins;
+
 .container {
   display: flex;
   flex-direction: column;
@@ -15,6 +17,7 @@
 
   &__sidenav-content {
     padding: vars.$primaryPadding;
+    transition: all 0.2s linear;
   }
 
   &__menu-toggle {
@@ -34,6 +37,7 @@
 }
 
 .mat-list-base {
+  @include mixins.flex(0px, column);
   padding: 12px 0 0 0;
 }
 

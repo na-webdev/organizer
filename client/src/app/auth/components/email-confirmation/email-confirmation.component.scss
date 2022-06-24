@@ -1,0 +1,14 @@
+@use "src/sass/variables.scss" as vars;
+:host {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  background-image: url("/assets/images/sign-bg.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.mat-card {
+  opacity: 0.95;
+}

@@ -15,8 +15,6 @@ export class AddProjectComponent {
     ]),
   });
 
-  constructor() {}
-
   getTitleError(): string {
     return this.addProjectForm.get('title')!.errors?.['minlength']
       ? 'Project must be at least 3 characters long'

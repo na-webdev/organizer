@@ -40,7 +40,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.tasksSubscription.unsubscribe();
+    this.tasksSubscription?.unsubscribe();
   }
 
   getProjectData(): void {

@@ -5,6 +5,7 @@ const projectValidation = Joi.object({
   title: Joi.string().required(),
   description: Joi.string().required(),
   tasks: Joi.array().items(Joi.string()),
+  userRef: Joi.string(),
 });
 
 const projectValidator = (req, res, next) => {

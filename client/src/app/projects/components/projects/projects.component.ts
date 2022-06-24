@@ -28,7 +28,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.projectsSubscription.unsubscribe();
+    this.projectsSubscription?.unsubscribe();
   }
 
   openAddProjectForm(): void {
