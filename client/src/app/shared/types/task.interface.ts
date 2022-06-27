@@ -5,5 +5,7 @@ export interface TaskInterface {
   title: string;
   completed: boolean;
   importance: number;
+  plannedDate?: Date;
   projectRef?: ProjectInterface;
+  weekDays?: string[];
 }

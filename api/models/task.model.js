@@ -22,6 +22,13 @@ const taskSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+  plannedDate: {
+    type: Date,
+    default: Date.now,
+  },
+  weekDays: {
+    type: [{ type: String }],
+  },
 });
 
 const Task = mongoose.model("Task", taskSchema);

@@ -6,10 +6,31 @@
   }
   &__button {
     padding: 8px 20px;
-    margin-top: -19px;
   }
 
   &__field {
     flex: 1;
   }
+
+  &__options {
+    @include mixins.flex(10px 40px);
+    margin: 15px 0 20px;
+    padding-left: 5px;
+  }
+
+  &__weekdays {
+    @include mixins.flex(10px);
+  }
+
+  &__checkbox:first-child {
+    margin-right: 25px;
+  }
+
+  &::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+}
+
+mat-error {
+  margin-top: 15px !important;
 }

@@ -5,7 +5,7 @@
   transition: all 0.2s ease-in-out;
   flex: 1;
   box-shadow: vars.$primaryBoxShadow;
-  padding: vars.$secondaryPadding;
+  padding: 32px vars.$secondaryPadding + 2 25px;
   border-radius: vars.$primaryRadius;
   position: relative;
 
@@ -15,14 +15,20 @@
 
   &__buttons {
     visibility: collapse;
+    position: absolute;
+    top: -2px;
+    right: 2px;
   }
 
   &__cover {
-    @include mixins.flex(10px, row, space-between);
+    @include mixins.flex(10px, row, flex-start);
   }
 
   &__button {
-    color: gray;
+    opacity: 0.5;
+    mat-icon {
+      font-size: 20px;
+    }
   }
 
   &__text {
@@ -31,13 +37,13 @@
   }
 
   &__label {
-    // place the center
-    position: absolute;
-    bottom: 3%;
-    left: 50%;
-    transform: translate(-50%, 0%);
-    opacity: 0.6;
-    font-size: 12px;
+    text-decoration: underline;
+  }
+
+  &__footer {
+    @include mixins.flex(10px, row, flex-start);
+    margin-top: 15px;
+    opacity: 0.5;
   }
 
   &__label:hover {

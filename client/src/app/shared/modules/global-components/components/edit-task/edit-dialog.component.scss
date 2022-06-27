@@ -1,0 +1,22 @@
+@use "src/sass/mixins" as mixins;
+
+:host {
+  @include mixins.flex(10px, column, stretch, stretch);
+  height: 100%;
+}
+
+mat-dialog-content {
+  flex-grow: 1;
+}
+
+.edit-task {
+  &__weekdays {
+    @include mixins.flex(15px);
+    margin: 5px 0 20px;
+    margin-left: 5px;
+  }
+
+  &__checkbox:first-child {
+    flex-grow: 1;
+  }
+}

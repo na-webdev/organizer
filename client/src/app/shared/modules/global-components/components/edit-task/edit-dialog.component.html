@@ -1,13 +1,50 @@
 <h2 mat-dialog-title>Edit task</h2>
 <mat-dialog-content class="mat-typography">
-  <form autocomplete="off" [formGroup]="editTaskForm" class="add-task">
+  <form autocomplete="off" [formGroup]="editTaskForm" class="edit-task">
     <mat-form-field
       style="width: 100%"
       class="dialog-body__row"
       appearance="outline"
     >
       <mat-label>Name</mat-label>
-      <input formControlName="text" matInput cdkFocusInitial />
+      <input formControlName="title" matInput cdkFocusInitial />
+      <mat-error *ngIf="editTaskForm.invalid">{{ getTitleError() }}</mat-error>
+    </mat-form-field>
+
+    <div class="edit-task__weekdays">
+      <mat-checkbox
+        (change)="setAll($event.checked)"
+        class="edit-task__checkbox"
+        color="primary"
+        [checked]="allSelected"
+        [disabled]="editTaskForm.invalid || !isDaysValid"
+      >
+        Week
+      </mat-checkbox>
+      <mat-checkbox
+        (change)="day.selected = $event.checked; watchAllDays()"
+        [checked]="day.selected"
+        class="edit-task__checkbox"
+        color="primary"
+        *ngFor="let day of weekDays"
+        [disabled]="editTaskForm.invalid || !isDaysValid"
+      >
+        {{ day.name | truncate: 3:false:"" }}
+      </mat-checkbox>
+    </div>
+    <mat-form-field id="deadline-picker" appearance="outline">
+      <mat-label>Set date</mat-label>
+      <input
+        placeholder="MM/DD/YYYY"
+        formControlName="plannedDate"
+        matInput
+        [matDatepicker]="picker"
+      />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="editTaskForm.invalid">{{
+        getPlannedDateError()
+      }}</mat-error>
     </mat-form-field>
   </form>
 </mat-dialog-content>
@@ -16,11 +53,14 @@
   <button
     mat-button
     [mat-dialog-close]="{
-      title: editTaskForm.value.text,
+      title: editTaskForm.value.title,
       completed: task.completed,
-      _id: task._id
+      _id: task._id,
+      plannedDate: editTaskForm.value.plannedDate,
+      weekDays: this.weekDaysUpdated
     }"
     cdkFocusInitial
+    [disabled]="editTaskForm.invalid"
   >
     Save
   </button>

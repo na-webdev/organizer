@@ -19,6 +19,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 const materialModules = [
   MatCardModule,
@@ -39,6 +40,7 @@ const materialModules = [
   MatProgressBarModule,
   MatProgressSpinnerModule,
   MatChipsModule,
+  MatDatepickerModule,
 ];
 
 @NgModule({

@@ -47,6 +47,8 @@ export class TaskService {
       completed: boolean;
       importance: number;
       projectRef?: string;
+      plannedDate?: Date;
+      weekDays?: string[];
     } = {
       title: task.title,
       completed: task.completed,
@@ -56,6 +58,14 @@ export class TaskService {
     if (projectId) {
       data['projectRef'] = projectId;
     }
+    if (task.plannedDate) {
+      data['plannedDate'] = task.plannedDate;
+    } else {
+      data['plannedDate'] = new Date();
+    }
+    if (task.weekDays) {
+      data['weekDays'] = task.weekDays;
+    }
 
     return this.http.post<ResponseInterface>(apiUrl + 'tasks', data).pipe(
       tap((res) => {
@@ -63,11 +73,19 @@ export class TaskService {
           this.addTaskToProject(res._id, projectId)
             .pipe(take(1))
             .subscribe((projectRes) => {
-              this.tasks.unshift({ ...task, _id: res._id });
+              this.tasks.unshift({
+                ...task,
+                _id: res._id,
+                plannedDate: data['plannedDate'],
+              });
               this.tasksUpdated.next(this.tasks);
             });
         } else {
-          this.tasks.unshift({ ...task, _id: res._id });
+          this.tasks.unshift({
+            ...task,
+            _id: res._id,
+            plannedDate: data['plannedDate'],
+          });
           this.tasksUpdated.next(this.tasks);
         }
       })
@@ -99,12 +117,19 @@ export class TaskService {
   }
 
   updateTask(task: TaskInterface): Observable<ResponseInterface> {
+    const taskObj: TaskInterface = {
+      title: task.title,
+      completed: task.completed,
+      importance: task.importance,
+      weekDays: task.weekDays,
+    };
+    if (task.plannedDate) {
+      taskObj['plannedDate'] = task.plannedDate;
+    } else {
+      taskObj['plannedDate'] = new Date();
+    }
     return this.http
-      .patch<ResponseInterface>(apiUrl + 'tasks/' + task._id, {
-        title: task.title,
-        completed: task.completed,
-        importance: task.importance,
-      })
+      .patch<ResponseInterface>(apiUrl + 'tasks/' + task._id, taskObj)
       .pipe(
         tap((res) => {
           this.tasks = this.tasks.map((t) =>
