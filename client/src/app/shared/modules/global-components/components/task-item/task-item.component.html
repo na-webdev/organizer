@@ -12,6 +12,16 @@
         <span class="task-item__text">{{ task.title }}</span>
       </div>
       <div class="task-item__footer">
+        <span>
+          {{
+            task.period === "today" || task.period === "tomorrow"
+              ? (task.period | titlecase)
+              : (task.plannedDate | date: "MM/dd/yyyy")
+          }}
+        </span>
+        <span *ngIf="task.projectRef?.title && mode" class="task-item__dot"
+          >&middot;</span
+        >
         <span
           class="task-item__label"
           *ngIf="task.projectRef?.title && mode"
@@ -19,16 +29,6 @@
           [title]="task.projectRef?.title ? task.projectRef?.title : ''"
         >
           {{ task.projectRef?.title | truncate: 15 }}
-        </span>
-        <span *ngIf="task.projectRef?.title && mode">&#8226;</span>
-        <span *ngIf="task.plannedDate">
-          {{ task.plannedDate | date: "MM/dd/yyyy" }}
-        </span>
-        <span *ngIf="task.plannedDate && task.weekDays!.length !== 0"
-          >&#8226;</span
-        >
-        <span *ngFor="let day of task.weekDays">
-          {{ day | truncate: 1:false:"" }}
         </span>
       </div>
     </div>

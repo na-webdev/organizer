@@ -24,10 +24,10 @@ const taskSchema = new Schema({
   },
   plannedDate: {
     type: Date,
-    default: Date.now,
+    default: new Date(),
   },
-  weekDays: {
-    type: [{ type: String }],
+  period: {
+    type: String,
   },
 });
 

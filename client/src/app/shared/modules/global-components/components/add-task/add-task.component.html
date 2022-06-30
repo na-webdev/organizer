@@ -21,27 +21,16 @@
     </button>
   </div>
   <div class="add-task__options">
-    <div class="add-task__weekdays">
-      <mat-checkbox
-        (change)="setAll($event.checked)"
-        class="add-task__checkbox"
-        color="primary"
-        [checked]="allSelected"
-        [disabled]="addTaskForm.invalid || !isDaysValid"
-      >
-        Week
-      </mat-checkbox>
-      <mat-checkbox
-        (change)="day.selected = $event.checked; watchAllDays()"
-        [checked]="day.selected"
-        class="add-task__checkbox"
-        color="primary"
-        *ngFor="let day of weekDays"
-        [disabled]="addTaskForm.invalid || !isDaysValid"
-      >
-        {{ day.name | truncate: 3:false:"" }}
-      </mat-checkbox>
-    </div>
+    <mat-radio-group
+      formControlName="period"
+      class="add-task__periods"
+      aria-label="Select an option"
+      color="primary"
+    >
+      <mat-radio-button value="1 week">1 week</mat-radio-button>
+      <mat-radio-button value="2 weeks">2 weeks</mat-radio-button>
+      <mat-radio-button value="1 month">1 month</mat-radio-button>
+    </mat-radio-group>
     <mat-form-field id="deadline-picker" appearance="outline">
       <mat-label>Set date</mat-label>
       <input

@@ -10,13 +10,9 @@ mat-dialog-content {
 }
 
 .edit-task {
-  &__weekdays {
-    @include mixins.flex(15px);
+  &__periods {
+    @include mixins.flex(20px);
     margin: 5px 0 20px;
     margin-left: 5px;
-  }
-
-  &__checkbox:first-child {
-    flex-grow: 1;
   }
 }

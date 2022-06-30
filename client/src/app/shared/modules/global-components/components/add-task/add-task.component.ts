@@ -8,18 +8,9 @@ import { TaskInterface } from 'src/app/shared/types/task.interface';
   styleUrls: ['./add-task.component.scss'],
 })
 export class AddTaskComponent implements OnInit {
-  allSelected: boolean = false;
   panelOpenState: boolean = false;
-  isDaysValid: boolean = false;
-  weekDays: { name: string; selected: boolean }[] = [
-    { name: 'Monday', selected: false },
-    { name: 'Tuesday', selected: false },
-    { name: 'Wednesday', selected: false },
-    { name: 'Thursday', selected: false },
-    { name: 'Friday', selected: false },
-    { name: 'Saturday', selected: false },
-    { name: 'Sunday', selected: false },
-  ];
+  selectedFromDate!: boolean;
+
   @Output() addTaskEvent: EventEmitter<TaskInterface> = new EventEmitter();
 
   addTaskForm: FormGroup = new FormGroup({
@@ -28,6 +19,7 @@ export class AddTaskComponent implements OnInit {
       value: '',
       disabled: true,
     }),
+    period: new FormControl({ value: '', disabled: true }),
   });
 
   ngOnInit(): void {
@@ -36,24 +28,17 @@ export class AddTaskComponent implements OnInit {
 
   onSubmit(): void {
     if (this.addTaskForm.get('title')?.value) {
-      const { title, plannedDate } = this.addTaskForm.value;
+      const { title, plannedDate, period } = this.addTaskForm.value;
       const taskObj: TaskInterface = {
         importance: 0,
         title: title,
         completed: false,
-        weekDays: this.weekDays
-          .filter((day) => day.selected)
-          .map((day) => day.name),
+        period: period ? period : 'today',
+        plannedDate: plannedDate ? plannedDate : new Date(),
       };
-      if (plannedDate) {
-        taskObj.plannedDate = plannedDate;
-      }
 
-      console.log(taskObj);
       this.addTaskEvent.emit(taskObj);
       this.addTaskForm.reset();
-      this.weekDays.forEach((day) => (day.selected = false));
-      this.allSelected = false;
     }
   }
 
@@ -63,36 +48,28 @@ export class AddTaskComponent implements OnInit {
       : '';
   }
 
-  setAll(selected: boolean): void {
-    this.allSelected = selected;
-    this.weekDays.forEach((day) => (day.selected = selected));
-  }
-
-  watchAllDays() {
-    if (this.weekDays.every((day) => day.selected)) {
-      this.allSelected = true;
-    }
-    if (this.weekDays.some((day) => !day.selected)) {
-      this.allSelected = false;
-    }
-  }
-
   setInputListeners() {
     this.addTaskForm.get('title')!.valueChanges.subscribe((value) => {
       if (value && value.length > 2) {
         this.addTaskForm.get('plannedDate')!.enable();
-        this.isDaysValid = true;
+        this.addTaskForm.get('period')!.enable();
       } else {
         this.addTaskForm.get('plannedDate')!.disable();
-        this.isDaysValid = false;
+        this.addTaskForm.get('period')!.disable();
       }
     });
     this.addTaskForm.get('plannedDate')!.valueChanges.subscribe((date) => {
-      if (date && new Date(date) < new Date()) {
-        this.addTaskForm.get('plannedDate')!.setErrors({
-          invalidDate: true,
-        });
+      if (date) {
+        if (new Date(date) < new Date()) {
+          this.addTaskForm.get('plannedDate')!.setErrors({
+            invalidDate: true,
+          });
+        }
+        this.setPeriodValue(date);
       }
+    });
+    this.addTaskForm.get('period')!.valueChanges.subscribe((value) => {
+      this.setPlannedDate(value);
     });
   }
 
@@ -104,5 +81,49 @@ export class AddTaskComponent implements OnInit {
       }
     }
     return '';
+  }
+
+  setPeriodValue(date: Date): void {
+    this.selectedFromDate = true;
+    const selectedTime = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    ).getTime();
+    const currentTime = new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDate()
+    ).getTime();
+    if (selectedTime - currentTime === 7 * 24 * 60 * 60 * 1000) {
+      this.addTaskForm.get('period')!.setValue('1 week');
+    } else if (selectedTime - currentTime === 14 * 24 * 60 * 60 * 1000) {
+      this.addTaskForm.get('period')!.setValue('2 weeks');
+    } else if (selectedTime - currentTime === 30 * 24 * 60 * 60 * 1000) {
+      this.addTaskForm.get('period')!.setValue('1 month');
+    } else if (selectedTime - currentTime === 24 * 60 * 60 * 1000) {
+      this.addTaskForm.get('period')!.setValue('tomorrow');
+    } else {
+      this.addTaskForm.get('period')!.reset();
+    }
+  }
+
+  setPlannedDate(value: string): void {
+    if (value && !this.selectedFromDate) {
+      if (value === '1 week') {
+        this.addTaskForm
+          .get('plannedDate')!
+          .setValue(new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000));
+      } else if (value === '2 weeks') {
+        this.addTaskForm
+          .get('plannedDate')!
+          .setValue(new Date(new Date().getTime() + 14 * 24 * 60 * 60 * 1000));
+      } else if (value === '1 month') {
+        this.addTaskForm
+          .get('plannedDate')!
+          .setValue(new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000));
+      }
+    }
+    this.selectedFromDate = false;
   }
 }

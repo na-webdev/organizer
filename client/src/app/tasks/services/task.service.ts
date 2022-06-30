@@ -48,23 +48,17 @@ export class TaskService {
       importance: number;
       projectRef?: string;
       plannedDate?: Date;
-      weekDays?: string[];
+      period?: string;
     } = {
       title: task.title,
       completed: task.completed,
       importance: task.importance,
+      period: task.period,
+      plannedDate: task.plannedDate,
     };
 
     if (projectId) {
       data['projectRef'] = projectId;
-    }
-    if (task.plannedDate) {
-      data['plannedDate'] = task.plannedDate;
-    } else {
-      data['plannedDate'] = new Date();
-    }
-    if (task.weekDays) {
-      data['weekDays'] = task.weekDays;
     }
 
     return this.http.post<ResponseInterface>(apiUrl + 'tasks', data).pipe(
@@ -121,13 +115,10 @@ export class TaskService {
       title: task.title,
       completed: task.completed,
       importance: task.importance,
-      weekDays: task.weekDays,
+      period: task.period ? task.period : 'today',
+      plannedDate: task.plannedDate ? task.plannedDate : new Date(),
     };
-    if (task.plannedDate) {
-      taskObj['plannedDate'] = task.plannedDate;
-    } else {
-      taskObj['plannedDate'] = new Date();
-    }
+
     return this.http
       .patch<ResponseInterface>(apiUrl + 'tasks/' + task._id, taskObj)
       .pipe(

@@ -9,66 +9,25 @@ import { TaskInterface } from '../../../../types/task.interface';
   styleUrls: ['./edit-dialog.component.scss'],
 })
 export class EditDialogComponent {
-  allSelected: boolean = this.task.weekDays?.length === 7;
-  isDaysValid: boolean = true;
-  weekDays: { name: string; selected: boolean }[] = [
-    { name: 'Monday', selected: false },
-    { name: 'Tuesday', selected: false },
-    { name: 'Wednesday', selected: false },
-    { name: 'Thursday', selected: false },
-    { name: 'Friday', selected: false },
-    { name: 'Saturday', selected: false },
-    { name: 'Sunday', selected: false },
-  ];
-  weekDaysUpdated: string[] = [];
-
+  selectedFromDate!: boolean;
   editTaskForm: FormGroup = new FormGroup({
     title: new FormControl(this.task.title, [
       Validators.minLength(3),
       Validators.required,
     ]),
     plannedDate: new FormControl(this.task.plannedDate),
+    period: new FormControl(this.task.period),
   });
   constructor(@Inject(MAT_DIALOG_DATA) public task: TaskInterface) {
-    this.weekDays.forEach((day) => {
-      if (this.task.weekDays?.includes(day.name)) {
-        day.selected = true;
-      }
-    });
     this.setInputListeners();
-    this.weekDaysUpdated = this.weekDays
-      .filter((day) => day.selected)
-      .map((day) => day.name);
-  }
-
-  watchAllDays() {
-    if (this.weekDays.every((day) => day.selected)) {
-      this.allSelected = true;
-    }
-    if (this.weekDays.some((day) => !day.selected)) {
-      this.allSelected = false;
-    }
-    this.weekDaysUpdated = this.weekDays
-      .filter((day) => day.selected)
-      .map((day) => day.name);
-  }
-
-  setAll(selected: boolean): void {
-    this.allSelected = selected;
-    this.weekDays.forEach((day) => (day.selected = selected));
-    this.weekDaysUpdated = this.weekDays
-      .filter((day) => day.selected)
-      .map((day) => day.name);
   }
 
   setInputListeners() {
     this.editTaskForm.get('title')!.valueChanges.subscribe((value) => {
       if (value && value.length > 2) {
         this.editTaskForm.get('plannedDate')!.enable();
-        this.isDaysValid = true;
       } else {
         this.editTaskForm.get('plannedDate')!.disable();
-        this.isDaysValid = false;
       }
     });
     this.editTaskForm.get('plannedDate')!.valueChanges.subscribe((date) => {
@@ -77,6 +36,10 @@ export class EditDialogComponent {
           invalidDate: true,
         });
       }
+      this.setPeriodValue(date);
+    });
+    this.editTaskForm.get('period')!.valueChanges.subscribe((value) => {
+      this.setPlannedDate(value);
     });
   }
 
@@ -101,5 +64,49 @@ export class EditDialogComponent {
       }
     }
     return '';
+  }
+
+  setPeriodValue(date: Date): void {
+    this.selectedFromDate = true;
+    const selectedTime = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    ).getTime();
+    const currentTime = new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDate()
+    ).getTime();
+    if (selectedTime - currentTime === 7 * 24 * 60 * 60 * 1000) {
+      this.editTaskForm.get('period')!.setValue('1 week');
+    } else if (selectedTime - currentTime === 14 * 24 * 60 * 60 * 1000) {
+      this.editTaskForm.get('period')!.setValue('2 weeks');
+    } else if (selectedTime - currentTime === 30 * 24 * 60 * 60 * 1000) {
+      this.editTaskForm.get('period')!.setValue('1 month');
+    } else if (selectedTime - currentTime === 24 * 60 * 60 * 1000) {
+      this.editTaskForm.get('period')!.setValue('tomorrow');
+    } else {
+      this.editTaskForm.get('period')!.reset();
+    }
+  }
+
+  setPlannedDate(value: string): void {
+    if (value && !this.selectedFromDate) {
+      if (value === '1 week') {
+        this.editTaskForm
+          .get('plannedDate')!
+          .setValue(new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000));
+      } else if (value === '2 weeks') {
+        this.editTaskForm
+          .get('plannedDate')!
+          .setValue(new Date(new Date().getTime() + 14 * 24 * 60 * 60 * 1000));
+      } else if (value === '1 month') {
+        this.editTaskForm
+          .get('plannedDate')!
+          .setValue(new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000));
+      }
+    }
+    this.selectedFromDate = false;
   }
 }

@@ -18,12 +18,8 @@
     padding-left: 5px;
   }
 
-  &__weekdays {
-    @include mixins.flex(10px);
-  }
-
-  &__checkbox:first-child {
-    margin-right: 25px;
+  &__periods {
+    @include mixins.flex(10px 40px);
   }
 
   &::ng-deep .mat-form-field-wrapper {

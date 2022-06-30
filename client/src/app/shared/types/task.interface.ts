@@ -7,5 +7,5 @@ export interface TaskInterface {
   importance: number;
   plannedDate?: Date;
   projectRef?: ProjectInterface;
-  weekDays?: string[];
+  period?: string;
 }

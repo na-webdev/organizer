@@ -10,28 +10,16 @@
       <input formControlName="title" matInput cdkFocusInitial />
       <mat-error *ngIf="editTaskForm.invalid">{{ getTitleError() }}</mat-error>
     </mat-form-field>
-
-    <div class="edit-task__weekdays">
-      <mat-checkbox
-        (change)="setAll($event.checked)"
-        class="edit-task__checkbox"
-        color="primary"
-        [checked]="allSelected"
-        [disabled]="editTaskForm.invalid || !isDaysValid"
-      >
-        Week
-      </mat-checkbox>
-      <mat-checkbox
-        (change)="day.selected = $event.checked; watchAllDays()"
-        [checked]="day.selected"
-        class="edit-task__checkbox"
-        color="primary"
-        *ngFor="let day of weekDays"
-        [disabled]="editTaskForm.invalid || !isDaysValid"
-      >
-        {{ day.name | truncate: 3:false:"" }}
-      </mat-checkbox>
-    </div>
+    <mat-radio-group
+      formControlName="period"
+      class="edit-task__periods"
+      aria-label="Select an option"
+      color="primary"
+    >
+      <mat-radio-button value="1 week">1 week</mat-radio-button>
+      <mat-radio-button value="2 weeks">2 weeks</mat-radio-button>
+      <mat-radio-button value="1 month">1 month</mat-radio-button>
+    </mat-radio-group>
     <mat-form-field id="deadline-picker" appearance="outline">
       <mat-label>Set date</mat-label>
       <input
@@ -57,7 +45,7 @@
       completed: task.completed,
       _id: task._id,
       plannedDate: editTaskForm.value.plannedDate,
-      weekDays: this.weekDaysUpdated
+      period: editTaskForm.value.period
     }"
     cdkFocusInitial
     [disabled]="editTaskForm.invalid"

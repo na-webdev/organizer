@@ -8,7 +8,7 @@ const taskValidation = Joi.object({
   projectRef: Joi.string(),
   userRef: Joi.string(),
   plannedDate: Joi.date(),
-  weekDays: Joi.array().items(Joi.string()),
+  period: Joi.string(),
 });
 
 const taskValidator = (req, res, next) => {
