@@ -12,7 +12,7 @@
     {{ project.description }}
   </div>
   <app-add-task (addTaskEvent)="addNewTask($event)"></app-add-task>
-  <mat-card>
+  <!-- <mat-card>
     <div *ngIf="incompleteTasks.length === 0" class="message">
       <mat-icon>task</mat-icon>
     </div>
@@ -28,8 +28,61 @@
         cdkDrag
       ></app-task-item>
     </div>
-  </mat-card>
-  <mat-accordion class="accordion">
+  </mat-card> -->
+  <mat-tab-group>
+    <mat-tab label="Tasks on due">
+      <mat-card style="margin-top: 20px" *ngIf="commonTasks.length !== 0">
+        <div
+          cdkDropList
+          class="example-list"
+          (cdkDropListDropped)="drop($event, 'common')"
+        >
+          <h2>Common tasks</h2>
+          <app-task-item
+            class="example-box"
+            [task]="task"
+            [mode]="projectMode === 'task'"
+            *ngFor="let task of commonTasks"
+            (completeTaskEvent)="completeTask($event)"
+            (updateTaskEvent)="updateTask($event)"
+            (deleteTaskEvent)="deleteTask($event)"
+            cdkDrag
+          ></app-task-item>
+        </div>
+      </mat-card>
+      <mat-card style="margin-top: 20px" *ngFor="let section of pageSections">
+        <div
+          cdkDropList
+          class="example-list"
+          (cdkDropListDropped)="drop($event, section[0])"
+        >
+          <h2>{{ section[0] }}</h2>
+          <app-task-item
+            class="example-box"
+            [task]="task"
+            [mode]="projectMode === 'task'"
+            *ngFor="let task of section[1].tasks"
+            (completeTaskEvent)="completeTask($event)"
+            (updateTaskEvent)="updateTask($event)"
+            (deleteTaskEvent)="deleteTask($event)"
+            cdkDrag
+          ></app-task-item>
+        </div> </mat-card
+    ></mat-tab>
+    <mat-tab style="padding-top: 20px" label="Completed">
+      <app-task-item
+        class="example-box completed"
+        [mode]="projectMode === 'task'"
+        [task]="task"
+        *ngFor="let task of completedTasks"
+        (completeTaskEvent)="completeTask($event)"
+        (updateTaskEvent)="updateTask($event)"
+        (deleteTaskEvent)="deleteTask($event)"
+      ></app-task-item
+    ></mat-tab>
+  </mat-tab-group>
+
+  <!-- <mat-accordion class="accordion">
     <mat-expansion-panel
       class="mat-elevation-z0"
       (opened)="panelOpenState = true"
@@ -41,17 +94,8 @@
           {{ completedTasks.length }} tasks
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <app-task-item
-        class="example-box completed"
-        [mode]="projectMode === 'task'"
-        [task]="task"
-        *ngFor="let task of completedTasks"
-        (completeTaskEvent)="completeTask($event)"
-        (updateTaskEvent)="updateTask($event)"
-        (deleteTaskEvent)="deleteTask($event)"
-      ></app-task-item>
     </mat-expansion-panel>
-  </mat-accordion>
+  </mat-accordion> -->
 </div>
 <ng-template #spinner>
   <mat-spinner color="primary" [diameter]="50"></mat-spinner>

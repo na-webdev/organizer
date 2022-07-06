@@ -11,7 +11,14 @@ class TaskService {
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const tasks = await Task.find({
       userRef: userId,
-      plannedDate: { $gte: today },
+      $or: [
+        {
+          plannedDate: { $gte: today },
+        },
+        {
+          commonTask: true,
+        },
+      ],
     })
       .sort({ importance: 1 })
       .populate({

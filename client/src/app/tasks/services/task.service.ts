@@ -49,12 +49,16 @@ export class TaskService {
       projectRef?: string;
       plannedDate?: Date;
       period?: string;
+      commonTask?: boolean;
+      repeat?: number;
     } = {
       title: task.title,
       completed: task.completed,
       importance: task.importance,
       period: task.period,
       plannedDate: task.plannedDate,
+      commonTask: task.commonTask,
+      repeat: task.repeat,
     };
 
     if (projectId) {
@@ -70,7 +74,6 @@ export class TaskService {
               this.tasks.unshift({
                 ...task,
                 _id: res._id,
-                plannedDate: data['plannedDate'],
               });
               this.tasksUpdated.next(this.tasks);
             });
@@ -78,7 +81,6 @@ export class TaskService {
           this.tasks.unshift({
             ...task,
             _id: res._id,
-            plannedDate: data['plannedDate'],
           });
           this.tasksUpdated.next(this.tasks);
         }
@@ -115,7 +117,7 @@ export class TaskService {
       title: task.title,
       completed: task.completed,
       importance: task.importance,
-      period: task.period ? task.period : 'today',
+      period: task.period ? task.period : '0',
       plannedDate: task.plannedDate ? task.plannedDate : new Date(),
     };
 
@@ -133,6 +135,7 @@ export class TaskService {
 
   reorderTasks(
     tasksToReorder: TaskInterface[],
+    otherTasks: TaskInterface[],
     completedTasks: TaskInterface[]
   ): void {
     const listOfIds = tasksToReorder.map((t) => t._id);
@@ -140,7 +143,7 @@ export class TaskService {
       .put<{ message: string }>(apiUrl + 'tasks/reorder', { listOfIds })
       .pipe(
         tap((res) => {
-          this.tasks = [...tasksToReorder, ...completedTasks];
+          this.tasks = [...tasksToReorder, ...otherTasks, ...completedTasks];
           this.tasksUpdated.next(this.tasks);
         }),
         take(1)

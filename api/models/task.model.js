@@ -24,10 +24,15 @@ const taskSchema = new Schema({
   },
   plannedDate: {
     type: Date,
-    default: new Date(),
   },
   period: {
     type: String,
+  },
+  commonTask: {
+    type: Boolean,
+  },
+  repeat: {
+    type: Number,
   },
 });
 

@@ -9,7 +9,12 @@ import { TaskInterface } from 'src/app/shared/types/task.interface';
 })
 export class AddTaskComponent implements OnInit {
   panelOpenState: boolean = false;
-  selectedFromDate!: boolean;
+  periods = [
+    { value: '1', viewValue: 'Daily' },
+    { value: '7', viewValue: 'Weekly' },
+    { value: '30', viewValue: 'Monthly' },
+    { value: '365', viewValue: 'Yearly' },
+  ];
 
   @Output() addTaskEvent: EventEmitter<TaskInterface> = new EventEmitter();
 
@@ -20,6 +25,10 @@ export class AddTaskComponent implements OnInit {
       disabled: true,
     }),
     period: new FormControl({ value: '', disabled: true }),
+    repeat: new FormControl({ value: '', disabled: true }, [
+      Validators.min(1),
+      Validators.max(60),
+    ]),
   });
 
   ngOnInit(): void {
@@ -28,15 +37,16 @@ export class AddTaskComponent implements OnInit {
 
   onSubmit(): void {
     if (this.addTaskForm.get('title')?.value) {
-      const { title, plannedDate, period } = this.addTaskForm.value;
+      const { title, plannedDate, period, repeat } = this.addTaskForm.value;
       const taskObj: TaskInterface = {
         importance: 0,
         title: title,
         completed: false,
-        period: period ? period : 'today',
+        period: period ? period : '0',
         plannedDate: plannedDate ? plannedDate : new Date(),
+        commonTask: !period && !plannedDate,
+        repeat: repeat ? repeat : 0,
       };
-
       this.addTaskEvent.emit(taskObj);
       this.addTaskForm.reset();
     }
@@ -60,16 +70,23 @@ export class AddTaskComponent implements OnInit {
     });
     this.addTaskForm.get('plannedDate')!.valueChanges.subscribe((date) => {
       if (date) {
-        if (new Date(date) < new Date()) {
+        let now = new Date();
+        if (
+          new Date(date) <
+          new Date(now.getFullYear(), now.getMonth(), now.getDate())
+        ) {
           this.addTaskForm.get('plannedDate')!.setErrors({
             invalidDate: true,
           });
         }
-        this.setPeriodValue(date);
       }
     });
     this.addTaskForm.get('period')!.valueChanges.subscribe((value) => {
-      this.setPlannedDate(value);
+      if (value) {
+        this.addTaskForm.get('repeat')!.enable();
+      } else {
+        this.addTaskForm.get('repeat')!.disable();
+      }
     });
   }
 
@@ -83,47 +100,16 @@ export class AddTaskComponent implements OnInit {
     return '';
   }
 
-  setPeriodValue(date: Date): void {
-    this.selectedFromDate = true;
-    const selectedTime = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate()
-    ).getTime();
-    const currentTime = new Date(
-      new Date().getFullYear(),
-      new Date().getMonth(),
-      new Date().getDate()
-    ).getTime();
-    if (selectedTime - currentTime === 7 * 24 * 60 * 60 * 1000) {
-      this.addTaskForm.get('period')!.setValue('1 week');
-    } else if (selectedTime - currentTime === 14 * 24 * 60 * 60 * 1000) {
-      this.addTaskForm.get('period')!.setValue('2 weeks');
-    } else if (selectedTime - currentTime === 30 * 24 * 60 * 60 * 1000) {
-      this.addTaskForm.get('period')!.setValue('1 month');
-    } else if (selectedTime - currentTime === 24 * 60 * 60 * 1000) {
-      this.addTaskForm.get('period')!.setValue('tomorrow');
-    } else {
-      this.addTaskForm.get('period')!.reset();
-    }
-  }
-
-  setPlannedDate(value: string): void {
-    if (value && !this.selectedFromDate) {
-      if (value === '1 week') {
-        this.addTaskForm
-          .get('plannedDate')!
-          .setValue(new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000));
-      } else if (value === '2 weeks') {
-        this.addTaskForm
-          .get('plannedDate')!
-          .setValue(new Date(new Date().getTime() + 14 * 24 * 60 * 60 * 1000));
-      } else if (value === '1 month') {
-        this.addTaskForm
-          .get('plannedDate')!
-          .setValue(new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000));
+  getRepeatError(): string {
+    const errorObj = this.addTaskForm.get('repeat')!.errors;
+    if (errorObj) {
+      if (errorObj?.['min']) {
+        return 'Repeat must be at least 1';
+      }
+      if (errorObj?.['max']) {
+        return 'Repeat must be at most 60';
       }
     }
-    this.selectedFromDate = false;
+    return '';
   }
 }

@@ -21,18 +21,28 @@
     </button>
   </div>
   <div class="add-task__options">
-    <mat-radio-group
-      formControlName="period"
-      class="add-task__periods"
-      aria-label="Select an option"
-      color="primary"
-    >
-      <mat-radio-button value="1 week">1 week</mat-radio-button>
-      <mat-radio-button value="2 weeks">2 weeks</mat-radio-button>
-      <mat-radio-button value="1 month">1 month</mat-radio-button>
-    </mat-radio-group>
+    <mat-form-field appearance="outline">
+      <mat-label>Set period</mat-label>
+      <mat-select formControlName="period">
+        <mat-option value="">No period</mat-option>
+        <mat-option *ngFor="let period of periods" [value]="period.value">
+          {{ period.viewValue }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Repeat period</mat-label>
+      <input
+        formControlName="repeat"
+        [defaultValue]="1"
+        type="number"
+        class="add-task__input"
+        matInput
+      />
+      <mat-error *ngIf="addTaskForm.invalid">{{ getRepeatError() }}</mat-error>
+    </mat-form-field>
     <mat-form-field id="deadline-picker" appearance="outline">
-      <mat-label>Set date</mat-label>
+      <mat-label>Start date</mat-label>
       <input
         placeholder="MM/DD/YYYY"
         formControlName="plannedDate"
