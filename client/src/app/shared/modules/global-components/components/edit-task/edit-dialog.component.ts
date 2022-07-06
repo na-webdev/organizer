@@ -22,7 +22,6 @@ export class EditDialogComponent {
       Validators.required,
     ]),
     plannedDate: new FormControl(this.task.plannedDate),
-    period: new FormControl(this.task.period),
   });
   constructor(@Inject(MAT_DIALOG_DATA) public task: TaskInterface) {
     this.setInputListeners();
@@ -43,7 +42,6 @@ export class EditDialogComponent {
         });
       }
     });
-    this.editTaskForm.get('period')!.valueChanges.subscribe((value) => {});
   }
 
   getTitleError(): string {

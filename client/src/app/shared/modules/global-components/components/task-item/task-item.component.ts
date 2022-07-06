@@ -24,7 +24,6 @@ export class TaskItemComponent {
   onEdit(): void {
     let dialogRef = this.dialog.open(EditDialogComponent, {
       width: '300px',
-      height: '450px',
       data: this.task,
     });
     dialogRef.afterClosed().subscribe((result) => {
