@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, take, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, take, tap } from 'rxjs';
 import { TaskInterface } from '../../shared/types/task.interface';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -13,29 +13,50 @@ const apiUrl = environment.apiUrl;
 export class TaskService {
   private tasks: TaskInterface[] = [];
   private tasksUpdated = new BehaviorSubject<TaskInterface[]>(this.tasks);
+  private loading = new BehaviorSubject<boolean>(true);
 
   constructor(private http: HttpClient) {}
 
-  requestUserTasks(): void {
+  requestUserTasks(pageNumber: number, limit: number, mode: string): void {
     this.http
-      .get<TaskInterface[]>(apiUrl + 'tasks')
+      .get<TaskInterface[]>(
+        apiUrl + 'tasks' + `?page=${pageNumber}&limit=${limit}`
+      )
       .pipe(
         tap((tasks: TaskInterface[]) => {
-          this.tasks = tasks;
+          if (mode === 'task') {
+            this.tasks = this.tasks.concat(tasks);
+          } else {
+            this.tasks = tasks;
+          }
           this.tasksUpdated.next(this.tasks);
+          this.setLoadingState(false);
         }),
         take(1)
       )
       .subscribe();
   }
 
-  setTasks(tasks: TaskInterface[]): void {
-    this.tasks = tasks;
+  setTasks(tasks: TaskInterface[], projectId: string = '', mode: string): void {
+    if (mode === 'project') {
+      this.tasks = this.tasks.concat(tasks);
+    } else {
+      this.tasks = tasks;
+    }
     this.tasksUpdated.next(this.tasks);
+    this.setLoadingState(false);
   }
 
   getAllTasks(): Observable<TaskInterface[]> {
     return this.tasksUpdated.asObservable();
+  }
+
+  getLoadingState(): Observable<boolean> {
+    return this.loading.asObservable();
+  }
+
+  setLoadingState(state: boolean): void {
+    this.loading.next(state);
   }
 
   addNewTask(

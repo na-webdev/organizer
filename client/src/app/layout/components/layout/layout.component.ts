@@ -20,7 +20,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 })
 export class LayoutComponent implements OnDestroy {
   mobileQuery: MediaQueryList;
-  isMenuOpen: boolean = true;
+  isMenuOpen: boolean = false;
   darkTheme: boolean = localStorage.getItem('darkTheme') === 'true';
 
   menuItems: MenuItem[] = menuItems;

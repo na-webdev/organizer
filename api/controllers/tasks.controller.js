@@ -5,7 +5,9 @@ const TaskService = require("../services/task.service.js");
 const getUserTasks = async (req, res, next) => {
   try {
     const userId = req.user._id;
-    const tasks = await TaskService.getUserTasks(userId);
+    const pageNumber = req.query.page || 0;
+    const limit = req.query.limit || 10;
+    const tasks = await TaskService.getUserTasks(userId, pageNumber, limit);
 
     res.status(200).json(tasks);
   } catch (error) {

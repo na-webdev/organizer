@@ -6,7 +6,7 @@ class TaskService {
     return newTask.save();
   }
 
-  async getUserTasks(userId) {
+  async getUserTasks(userId, pageNumber, limit) {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const tasks = await Task.find({
@@ -20,11 +20,13 @@ class TaskService {
         },
       ],
     })
-      .sort({ importance: 1 })
+      .sort({ plannedDate: 1, importance: 1 })
       .populate({
         path: "projectRef",
         ref: "Project",
-      });
+      })
+      .skip(parseInt(pageNumber) * parseInt(limit))
+      .limit(parseInt(limit));
 
     return tasks;
   }

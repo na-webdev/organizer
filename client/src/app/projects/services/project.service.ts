@@ -35,10 +35,15 @@ export class ProjectService {
     return this.projectsUpdated.asObservable();
   }
 
-  getProjectById(projectId: string | null): Observable<ProjectInterface> {
-    return this.http.get<ProjectInterface>(apiUrl + 'projects/' + projectId);
+  getProjectById(
+    projectId: string | null,
+    pageNumber: number,
+    limit: number
+  ): Observable<ProjectInterface> {
+    return this.http.get<ProjectInterface>(
+      apiUrl + 'projects/' + projectId + `?page=${pageNumber}&limit=${limit}`
+    );
   }
-
   addNewProject(project: ProjectInterface): Observable<ResponseInterface> {
     return this.http.post<ResponseInterface>(apiUrl + 'projects', project).pipe(
       tap((res) => {

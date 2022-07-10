@@ -8,10 +8,17 @@ class ProjectService {
     return projects;
   }
 
-  async getProjectWithTasks(id) {
+  async getProjectWithTasks(id, pageNumber, limit) {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const project = await Project.findOne({ _id: id }).populate({
       path: "tasks",
-      options: { sort: { importance: 1 } },
+      options: {
+        sort: { plannedDate: 1, importance: 1 },
+        skip: limit * pageNumber,
+        limit: limit,
+        plannedDate: { $gt: today },
+      },
     });
     return project;
   }

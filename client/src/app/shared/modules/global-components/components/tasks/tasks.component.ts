@@ -1,6 +1,13 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, take } from 'rxjs';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import {
+  debounceTime,
+  fromEvent,
+  Subscription,
+  take,
+  tap,
+  throttleTime,
+} from 'rxjs';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { TaskService } from 'src/app/tasks/services/task.service';
 import { TaskInterface } from 'src/app/shared/types/task.interface';
@@ -29,37 +36,70 @@ export class TasksComponent implements OnInit, OnDestroy {
     };
   } = {};
   commonTasks: TaskInterface[] = [];
+  page: number = 0;
+  oldTasksAmount: number = 0;
+  loading$ = this.taskService.getLoadingState();
+  eventSub!: Subscription;
 
   constructor(
     public taskService: TaskService,
     public alertService: AlertService,
     private route: ActivatedRoute,
     private projectService: ProjectService
-  ) {}
+  ) {
+    this.getAllTasks();
+  }
 
   ngOnInit(): void {
+    window.scrollTo(0, 0);
     if (this.route.snapshot.paramMap.get('id')) {
+      this.page = 0;
       this.getProjectData();
     } else {
+      this.page = 0;
+      this.taskService.requestUserTasks(this.page, 10, this.projectMode);
       this.projectMode = 'task';
-      this.taskService.requestUserTasks();
+      this.page++;
     }
-    this.getAllTasks();
+    this.eventSub = fromEvent(window, 'scroll')
+      .pipe(
+        tap(() => {
+          let pos =
+            (document.documentElement.scrollTop || document.body.scrollTop) +
+            document.documentElement.offsetHeight;
+          let max = document.documentElement.scrollHeight;
+
+          // pos/max will give you the distance between scroll bottom and and bottom of screen in percentage.
+          if (Math.floor(pos) == max) {
+            //Do your action here
+            this.loadMoreTasks();
+          }
+        }),
+        throttleTime(300)
+      )
+      .subscribe(() => {});
   }
 
   ngOnDestroy(): void {
     this.tasksSubscription?.unsubscribe();
+    this.eventSub.unsubscribe();
   }
 
   getProjectData(): void {
     this.projectId = this.route.snapshot.paramMap.get('id');
     this.projectService
-      .getProjectById(this.projectId)
+      .getProjectById(this.projectId, this.page, 10)
       .pipe(take(1))
       .subscribe((project) => {
         this.project = project;
-        this.taskService.setTasks(this.project.tasks);
+        this.taskService.setTasks(
+          this.project.tasks,
+          this.projectId || '',
+          this.projectMode
+        );
+
         this.projectMode = 'project';
+        this.page++;
       });
   }
 
@@ -152,7 +192,7 @@ export class TasksComponent implements OnInit, OnDestroy {
         newDate.getDate() + i * parseInt(task.period ? task.period : '1')
       );
       this.taskService
-        .addNewTask(newTask)
+        .addNewTask(newTask, this.projectId || '')
         .pipe(take(1))
         .subscribe(
           (res) => {},
@@ -198,5 +238,16 @@ export class TasksComponent implements OnInit, OnDestroy {
           this.alertService.alertMessage(err.error.message, 'danger');
         }
       );
+  }
+
+  loadMoreTasks() {
+    this.taskService.setLoadingState(true);
+    if (this.route.snapshot.paramMap.get('id')) {
+      this.getProjectData();
+    } else {
+      this.taskService.requestUserTasks(this.page, 10, this.projectMode);
+      this.projectMode = 'task';
+      this.page++;
+    }
   }
 }

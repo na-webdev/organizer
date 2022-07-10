@@ -15,7 +15,13 @@ const getUserProjects = async (req, res, next) => {
 
 const getProjectWithTasks = async (req, res, next) => {
   try {
-    const project = await ProjectService.getProjectWithTasks(req.params.id);
+    const pageNumber = parseInt(req.query.page) || 0;
+    const limit = parseInt(req.query.limit) || 10;
+    const project = await ProjectService.getProjectWithTasks(
+      req.params.id,
+      pageNumber,
+      limit
+    );
     if (!project) {
       throw createError(404, "Project not found");
     }
