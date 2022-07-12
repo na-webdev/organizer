@@ -13,11 +13,11 @@ class ProjectService {
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const project = await Project.findOne({ _id: id }).populate({
       path: "tasks",
+      match: { plannedDate: { $gte: today } },
       options: {
         sort: { plannedDate: 1, importance: 1 },
         skip: limit * pageNumber,
         limit: limit,
-        plannedDate: { $gt: today },
       },
     });
     return project;

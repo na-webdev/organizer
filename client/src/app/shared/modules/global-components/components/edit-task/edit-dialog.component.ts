@@ -9,20 +9,12 @@ import { TaskInterface } from '../../../../types/task.interface';
   styleUrls: ['./edit-dialog.component.scss'],
 })
 export class EditDialogComponent {
-  periods = [
-    { value: '1', viewValue: 'Daily' },
-    { value: '7', viewValue: 'Weekly' },
-    { value: '30', viewValue: 'Monthly' },
-    { value: '365', viewValue: 'Yearly' },
-  ];
-
   editTaskForm: FormGroup = new FormGroup({
     title: new FormControl(this.task.title, [
       Validators.minLength(3),
       Validators.required,
     ]),
     plannedDate: new FormControl(this.task.plannedDate),
-    period: new FormControl(this.task.period),
   });
   constructor(@Inject(MAT_DIALOG_DATA) public task: TaskInterface) {
     this.setInputListeners();
@@ -43,7 +35,6 @@ export class EditDialogComponent {
         });
       }
     });
-    this.editTaskForm.get('period')!.valueChanges.subscribe((value) => {});
   }
 
   getTitleError(): string {

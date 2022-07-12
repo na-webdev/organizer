@@ -44,6 +44,7 @@ export class ProjectService {
       apiUrl + 'projects/' + projectId + `?page=${pageNumber}&limit=${limit}`
     );
   }
+
   addNewProject(project: ProjectInterface): Observable<ResponseInterface> {
     return this.http.post<ResponseInterface>(apiUrl + 'projects', project).pipe(
       tap((res) => {

@@ -10,15 +10,6 @@
       <input formControlName="title" matInput cdkFocusInitial />
       <mat-error *ngIf="editTaskForm.invalid">{{ getTitleError() }}</mat-error>
     </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Set period</mat-label>
-      <mat-select formControlName="period">
-        <mat-option value="">No period</mat-option>
-        <mat-option *ngFor="let period of periods" [value]="period.value">
-          {{ period.viewValue }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
     <mat-form-field id="deadline-picker" appearance="outline">
       <mat-label>Set date</mat-label>
       <input
