@@ -42,7 +42,7 @@ export class AddTaskComponent implements OnInit {
         importance: 0,
         title: title,
         completed: false,
-        period: period ? period : '0',
+        period: period && repeat ? period : '0',
         plannedDate: plannedDate ? plannedDate : new Date(),
         commonTask: !period && !plannedDate,
         repeat: repeat ? repeat : 0,
@@ -108,6 +108,9 @@ export class AddTaskComponent implements OnInit {
       }
       if (errorObj?.['max']) {
         return 'Repeat must be at most 60';
+      }
+      if (errorObj?.['required']) {
+        return 'Repeat must be set';
       }
     }
     return '';

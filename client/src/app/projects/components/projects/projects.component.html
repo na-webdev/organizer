@@ -13,6 +13,9 @@
     [project]="project"
   ></app-project-item>
 </div>
-<p *ngIf="projects.length === 0">You do not have any projects</p>
-<mat-spinner *ngIf="showSpinner" color="primary" [diameter]="50"></mat-spinner>
+<mat-spinner
+  *ngIf="projects.length === 0"
+  color="primary"
+  [diameter]="50"
+></mat-spinner>
 <router-outlet></router-outlet>
