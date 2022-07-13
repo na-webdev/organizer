@@ -25,7 +25,12 @@ export class TaskService {
       .pipe(
         tap((tasks: TaskInterface[]) => {
           if (mode === 'task') {
-            this.tasks = this.tasks.concat(tasks);
+            this.tasks = this.tasks.concat(
+              tasks.filter((t) => {
+                let isTaskExist = this.tasks.find((t2) => t2._id === t._id);
+                return !isTaskExist;
+              })
+            );
           } else {
             this.tasks = tasks;
           }
@@ -39,7 +44,12 @@ export class TaskService {
 
   setTasks(tasks: TaskInterface[], projectId: string = '', mode: string): void {
     if (mode === 'project') {
-      this.tasks = this.tasks.concat(tasks);
+      this.tasks = this.tasks.concat(
+        tasks.filter((t) => {
+          let isTaskExist = this.tasks.find((t2) => t2._id === t._id);
+          return !isTaskExist;
+        })
+      );
     } else {
       this.tasks = tasks;
     }
