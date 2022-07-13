@@ -204,8 +204,13 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   deleteTask(task: TaskInterface): void {
+    let taskProjectId = this.projectId
+      ? this.projectId
+      : task.projectRef
+      ? task.projectRef._id
+      : '';
     this.taskService
-      .deleteTask(task, this.projectId ? this.projectId : '')
+      .deleteTask(task, taskProjectId)
       .pipe(take(1))
       .subscribe(
         (res) => {},

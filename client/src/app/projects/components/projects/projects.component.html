@@ -4,7 +4,7 @@
     <mat-icon>add</mat-icon>
   </button>
 </div>
-<div *ngIf="projects.length !== 0; else spinner" class="project-list">
+<div class="project-list">
   <app-project-item
     (deleteProjectEvent)="deleteProject($event)"
     (updateProjectEvent)="updateProject($event)"
@@ -13,7 +13,6 @@
     [project]="project"
   ></app-project-item>
 </div>
-<ng-template #spinner>
-  <mat-spinner color="primary" [diameter]="50"></mat-spinner>
-</ng-template>
+<p *ngIf="projects.length === 0">You do not have any projects</p>
+<mat-spinner *ngIf="showSpinner" color="primary" [diameter]="50"></mat-spinner>
 <router-outlet></router-outlet>

@@ -14,6 +14,7 @@ import { AddProjectComponent } from '../add-project/add-project.component';
 export class ProjectsComponent implements OnInit, OnDestroy {
   projects: ProjectInterface[] = [];
   projectsSubscription!: Subscription;
+  showSpinner: boolean = true;
 
   constructor(
     private dialog: MatDialog,
@@ -79,6 +80,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.projectsSubscription = this.projectService.getAllProjects().subscribe(
       (projects) => {
         this.projects = projects;
+        this.showSpinner = false;
       },
       (error) => {
         this.alertService.alertMessage(error.error.message, 'danger');
