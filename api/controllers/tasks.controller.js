@@ -1,12 +1,13 @@
 const mongoose = require("mongoose");
 const createError = require("http-errors");
 const TaskService = require("../services/task.service.js");
+const CONSTANTS = require("../utils/constants");
 
 const getUserTasks = async (req, res, next) => {
   try {
     const userId = req.user._id;
-    const pageNumber = req.query.page || 0;
-    const limit = req.query.limit || 10;
+    const pageNumber = req.query.page || CONSTANTS.INITIAL_PAGE;
+    const limit = req.query.limit || CONSTANTS.LIMIT_PER_PAGE;
     const tasks = await TaskService.getUserTasks(userId, pageNumber, limit);
 
     res.status(200).json(tasks);

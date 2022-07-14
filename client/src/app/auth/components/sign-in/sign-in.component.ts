@@ -13,11 +13,8 @@ export class SignInComponent {
   hide: boolean = true;
 
   signInForm: FormGroup = new FormGroup({
-    email: new FormControl('nurmatovrahimjon@gmail.com', [
-      Validators.required,
-      Validators.email,
-    ]),
-    password: new FormControl('1q@Wer', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required]),
   });
 
   constructor(
@@ -32,6 +29,7 @@ export class SignInComponent {
       (res) => {
         this.router.navigate(['/']);
         this.alertService.alertMessage(`Welcome ${res.user.username}!`, 'info');
+        this.signInForm.reset();
       },
       (err) => {
         this.alertService.alertMessage(err.error.message, 'danger');
