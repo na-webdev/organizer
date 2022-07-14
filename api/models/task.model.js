@@ -22,6 +22,18 @@ const taskSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+  plannedDate: {
+    type: Date,
+  },
+  period: {
+    type: String,
+  },
+  commonTask: {
+    type: Boolean,
+  },
+  repeat: {
+    type: Number,
+  },
 });
 
 const Task = mongoose.model("Task", taskSchema);

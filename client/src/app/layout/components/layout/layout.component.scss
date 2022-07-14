@@ -26,6 +26,7 @@
 }
 
 #side-nav {
+  position: fixed;
   &.menu-closed {
     width: 60px;
     transition: width 0.2s linear;

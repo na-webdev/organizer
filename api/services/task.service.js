@@ -6,13 +6,28 @@ class TaskService {
     return newTask.save();
   }
 
-  async getUserTasks(userId) {
-    const tasks = await Task.find({ userRef: userId })
-      .sort({ importance: 1 })
+  async getUserTasks(userId, pageNumber, limit) {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const tasks = await Task.find({
+      userRef: userId,
+      $or: [
+        {
+          plannedDate: { $gte: today },
+        },
+        {
+          commonTask: true,
+        },
+      ],
+    })
+      .sort({ plannedDate: 1, importance: 1 })
       .populate({
         path: "projectRef",
         ref: "Project",
-      });
+      })
+      .skip(parseInt(pageNumber) * parseInt(limit))
+      .limit(parseInt(limit));
+
     return tasks;
   }
 

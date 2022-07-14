@@ -1,23 +1,35 @@
-<div class="task-item">
+<mat-card class="task-item">
   <div class="task-item__row">
-    <div class="task-item__cover">
-      <mat-checkbox
-        [checked]="task.completed"
-        class="example-margin"
-        color="primary"
-        (change)="onComplete()"
-      >
-      </mat-checkbox>
-      <span class="task-item__text">{{ task.title }}</span>
+    <div>
+      <div class="task-item__cover">
+        <mat-checkbox
+          [checked]="task.completed"
+          class="example-margin"
+          color="primary"
+          (change)="onComplete()"
+        >
+        </mat-checkbox>
+        <span class="task-item__text">{{ task.title }}</span>
+      </div>
+      <div class="task-item__footer">
+        <span
+          class="task-item__label"
+          *ngIf="task.projectRef?.title && mode"
+          (click)="openProject()"
+          [title]="task.projectRef?.title ? task.projectRef?.title : ''"
+        >
+          {{ task.projectRef?.title | truncate: 15 }}
+        </span>
+        <!--dot in the middle -->
+        <span *ngIf="task.projectRef?.title && mode" class="task-item__dot"
+          >&middot;</span
+        >
+        <span>{{ task.plannedDate | date: "MM/dd/yyyy" }}</span>
+        <span *ngIf="task.commonTask" class="task-item__dot">&middot;</span>
+        <span *ngIf="task.commonTask">Common task</span>
+      </div>
     </div>
-    <div
-      *ngIf="task.projectRef?.title && mode"
-      (click)="openProject()"
-      [title]="task.projectRef?.title ? task.projectRef?.title : ''"
-      class="task-item__label"
-    >
-      {{ task.projectRef?.title | truncate: 15 }}
-    </div>
+
     <div class="task-item__buttons">
       <button class="task-item__button" mat-icon-button (click)="onEdit()">
         <mat-icon>edit</mat-icon>
@@ -27,4 +39,4 @@
       </button>
     </div>
   </div>
-</div>
+</mat-card>

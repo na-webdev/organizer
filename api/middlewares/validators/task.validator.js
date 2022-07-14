@@ -7,6 +7,10 @@ const taskValidation = Joi.object({
   importance: Joi.number(),
   projectRef: Joi.string(),
   userRef: Joi.string(),
+  plannedDate: Joi.date(),
+  period: Joi.string(),
+  commonTask: Joi.boolean(),
+  repeat: Joi.number(),
 });
 
 const taskValidator = (req, res, next) => {

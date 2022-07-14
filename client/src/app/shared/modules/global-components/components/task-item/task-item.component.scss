@@ -18,11 +18,11 @@
   }
 
   &__cover {
-    @include mixins.flex(10px, row, space-between);
+    @include mixins.flex(10px, row, flex-start);
   }
 
   &__button {
-    color: gray;
+    opacity: 0.5;
   }
 
   &__text {
@@ -31,18 +31,21 @@
   }
 
   &__label {
-    // place the center
-    position: absolute;
-    bottom: 3%;
-    left: 50%;
-    transform: translate(-50%, 0%);
-    opacity: 0.6;
-    font-size: 12px;
+    text-decoration: underline;
+  }
+
+  &__footer {
+    @include mixins.flex(10px, row, flex-start);
+    opacity: 0.8;
+    margin-top: 10px;
+  }
+
+  &__dot {
+    font-size: 22px;
   }
 
   &__label:hover {
     cursor: pointer;
-    opacity: 1;
   }
 
   &:hover &__buttons {
@@ -50,6 +53,6 @@
   }
 
   &:hover {
-    box-shadow: vars.$hoverBoxShadow;
+    box-shadow: vars.$hoverBoxShadow !important;
   }
 }

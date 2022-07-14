@@ -19,6 +19,10 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
 
 const materialModules = [
   MatCardModule,
@@ -39,6 +43,10 @@ const materialModules = [
   MatProgressBarModule,
   MatProgressSpinnerModule,
   MatChipsModule,
+  MatDatepickerModule,
+  MatRadioModule,
+  MatSelectModule,
+  MatTabsModule,
 ];
 
 @NgModule({

@@ -38,6 +38,14 @@ export class LayoutComponent implements OnDestroy {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
+    this.renderer.removeClass(
+      this.document.body,
+      this.darkTheme ? 'theme-light' : 'theme-dark'
+    );
+    this.renderer.addClass(
+      this.document.body,
+      this.darkTheme ? 'theme-dark' : 'theme-light'
+    );
   }
 
   ngOnDestroy(): void {

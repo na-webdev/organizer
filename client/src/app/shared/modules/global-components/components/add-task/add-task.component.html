@@ -20,4 +20,40 @@
       Add
     </button>
   </div>
+  <div class="add-task__options">
+    <mat-form-field appearance="outline">
+      <mat-label>Set period</mat-label>
+      <mat-select formControlName="period">
+        <mat-option value="">No period</mat-option>
+        <mat-option *ngFor="let period of periods" [value]="period.value">
+          {{ period.viewValue }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Repeat period</mat-label>
+      <input
+        formControlName="repeat"
+        [defaultValue]="1"
+        type="number"
+        class="add-task__input"
+        matInput
+      />
+      <mat-error *ngIf="addTaskForm.invalid">{{ getRepeatError() }}</mat-error>
+    </mat-form-field>
+    <mat-form-field id="deadline-picker" appearance="outline">
+      <mat-label>Start date</mat-label>
+      <input
+        placeholder="MM/DD/YYYY"
+        formControlName="plannedDate"
+        matInput
+        [matDatepicker]="picker"
+      />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="addTaskForm.invalid">{{
+        getPlannedDateError()
+      }}</mat-error>
+    </mat-form-field>
+  </div>
 </form>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, take, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, take, tap } from 'rxjs';
 import { TaskInterface } from '../../shared/types/task.interface';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -13,29 +13,60 @@ const apiUrl = environment.apiUrl;
 export class TaskService {
   private tasks: TaskInterface[] = [];
   private tasksUpdated = new BehaviorSubject<TaskInterface[]>(this.tasks);
+  private loading = new BehaviorSubject<boolean>(true);
 
   constructor(private http: HttpClient) {}
 
-  requestUserTasks(): void {
+  requestUserTasks(pageNumber: number, limit: number, mode: string): void {
     this.http
-      .get<TaskInterface[]>(apiUrl + 'tasks')
+      .get<TaskInterface[]>(
+        apiUrl + 'tasks' + `?page=${pageNumber}&limit=${limit}`
+      )
       .pipe(
         tap((tasks: TaskInterface[]) => {
-          this.tasks = tasks;
+          if (mode === 'task') {
+            this.tasks = this.tasks.concat(
+              tasks.filter((t) => {
+                let isTaskExist = this.tasks.find((t2) => t2._id === t._id);
+                return !isTaskExist;
+              })
+            );
+          } else {
+            this.tasks = tasks;
+          }
           this.tasksUpdated.next(this.tasks);
+          this.setLoadingState(false);
         }),
         take(1)
       )
       .subscribe();
   }
 
-  setTasks(tasks: TaskInterface[]): void {
-    this.tasks = tasks;
+  setTasks(tasks: TaskInterface[], projectId: string = '', mode: string): void {
+    if (mode === 'project') {
+      this.tasks = this.tasks.concat(
+        tasks.filter((t) => {
+          let isTaskExist = this.tasks.find((t2) => t2._id === t._id);
+          return !isTaskExist;
+        })
+      );
+    } else {
+      this.tasks = tasks;
+    }
     this.tasksUpdated.next(this.tasks);
+    this.setLoadingState(false);
   }
 
   getAllTasks(): Observable<TaskInterface[]> {
     return this.tasksUpdated.asObservable();
+  }
+
+  getLoadingState(): Observable<boolean> {
+    return this.loading.asObservable();
+  }
+
+  setLoadingState(state: boolean): void {
+    this.loading.next(state);
   }
 
   addNewTask(
@@ -47,10 +78,18 @@ export class TaskService {
       completed: boolean;
       importance: number;
       projectRef?: string;
+      plannedDate?: Date;
+      period?: string;
+      commonTask?: boolean;
+      repeat?: number;
     } = {
       title: task.title,
       completed: task.completed,
       importance: task.importance,
+      period: task.period,
+      plannedDate: task.plannedDate,
+      commonTask: task.commonTask,
+      repeat: task.repeat,
     };
 
     if (projectId) {
@@ -63,11 +102,17 @@ export class TaskService {
           this.addTaskToProject(res._id, projectId)
             .pipe(take(1))
             .subscribe((projectRes) => {
-              this.tasks.unshift({ ...task, _id: res._id });
+              this.tasks.unshift({
+                ...task,
+                _id: res._id,
+              });
               this.tasksUpdated.next(this.tasks);
             });
         } else {
-          this.tasks.unshift({ ...task, _id: res._id });
+          this.tasks.unshift({
+            ...task,
+            _id: res._id,
+          });
           this.tasksUpdated.next(this.tasks);
         }
       })
@@ -99,12 +144,16 @@ export class TaskService {
   }
 
   updateTask(task: TaskInterface): Observable<ResponseInterface> {
+    const taskObj: TaskInterface = {
+      title: task.title,
+      completed: task.completed,
+      importance: task.importance,
+      period: task.period ? task.period : '0',
+      plannedDate: task.plannedDate ? task.plannedDate : new Date(),
+    };
+
     return this.http
-      .patch<ResponseInterface>(apiUrl + 'tasks/' + task._id, {
-        title: task.title,
-        completed: task.completed,
-        importance: task.importance,
-      })
+      .patch<ResponseInterface>(apiUrl + 'tasks/' + task._id, taskObj)
       .pipe(
         tap((res) => {
           this.tasks = this.tasks.map((t) =>
@@ -117,6 +166,7 @@ export class TaskService {
 
   reorderTasks(
     tasksToReorder: TaskInterface[],
+    otherTasks: TaskInterface[],
     completedTasks: TaskInterface[]
   ): void {
     const listOfIds = tasksToReorder.map((t) => t._id);
@@ -124,7 +174,7 @@ export class TaskService {
       .put<{ message: string }>(apiUrl + 'tasks/reorder', { listOfIds })
       .pipe(
         tap((res) => {
-          this.tasks = [...tasksToReorder, ...completedTasks];
+          this.tasks = [...tasksToReorder, ...otherTasks, ...completedTasks];
           this.tasksUpdated.next(this.tasks);
         }),
         take(1)

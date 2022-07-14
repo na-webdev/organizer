@@ -12,7 +12,7 @@
     {{ project.description }}
   </div>
   <app-add-task (addTaskEvent)="addNewTask($event)"></app-add-task>
-  <mat-card>
+  <!-- <mat-card>
     <div *ngIf="incompleteTasks.length === 0" class="message">
       <mat-icon>task</mat-icon>
     </div>
@@ -28,30 +28,76 @@
         cdkDrag
       ></app-task-item>
     </div>
-  </mat-card>
-  <mat-accordion class="accordion">
-    <mat-expansion-panel
-      class="mat-elevation-z0"
-      (opened)="panelOpenState = true"
-      (closed)="panelOpenState = false"
-    >
-      <mat-expansion-panel-header class="accordion__header">
-        <mat-panel-title>Completed </mat-panel-title>
-        <mat-panel-description>
-          {{ completedTasks.length }} tasks
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-      <app-task-item
-        class="example-box completed"
-        [mode]="projectMode === 'task'"
-        [task]="task"
-        *ngFor="let task of completedTasks"
-        (completeTaskEvent)="completeTask($event)"
-        (updateTaskEvent)="updateTask($event)"
-        (deleteTaskEvent)="deleteTask($event)"
-      ></app-task-item>
-    </mat-expansion-panel>
-  </mat-accordion>
+  </mat-card> -->
+  <mat-tab-group>
+    <mat-tab label="Tasks on due">
+      <div class="tab-content">
+        <mat-card *ngIf="commonTasks.length !== 0">
+          <div
+            cdkDropList
+            class="example-list"
+            (cdkDropListDropped)="drop($event, 'common')"
+          >
+            <h2>Common tasks</h2>
+            <app-task-item
+              class="example-box"
+              [task]="task"
+              [mode]="projectMode === 'task'"
+              *ngFor="let task of commonTasks"
+              (completeTaskEvent)="completeTask($event)"
+              (updateTaskEvent)="updateTask($event)"
+              (deleteTaskEvent)="deleteTask($event)"
+              cdkDrag
+            ></app-task-item>
+          </div>
+        </mat-card>
+        <mat-card style="margin-top: 20px" *ngFor="let section of pageSections">
+          <div
+            cdkDropList
+            class="example-list"
+            (cdkDropListDropped)="drop($event, section[0])"
+          >
+            <h2>{{ section[0] }}</h2>
+            <app-task-item
+              class="example-box"
+              [task]="task"
+              [mode]="projectMode === 'task'"
+              *ngFor="let task of section[1].tasks"
+              (completeTaskEvent)="completeTask($event)"
+              (updateTaskEvent)="updateTask($event)"
+              (deleteTaskEvent)="deleteTask($event)"
+              cdkDrag
+            ></app-task-item>
+          </div>
+        </mat-card>
+        <mat-spinner
+          *ngIf="loading$ | async"
+          color="primary"
+          [diameter]="30"
+          class="spinner"
+        ></mat-spinner>
+      </div>
+    </mat-tab>
+    <mat-tab label="Completed">
+      <div class="tab-content">
+        <app-task-item
+          class="example-box completed"
+          [mode]="projectMode === 'task'"
+          [task]="task"
+          *ngFor="let task of completedTasks"
+          (completeTaskEvent)="completeTask($event)"
+          (updateTaskEvent)="updateTask($event)"
+          (deleteTaskEvent)="deleteTask($event)"
+        ></app-task-item>
+        <mat-spinner
+          *ngIf="loading$ | async"
+          color="primary"
+          [diameter]="30"
+          class="spinner"
+        ></mat-spinner>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>
 <ng-template #spinner>
   <mat-spinner color="primary" [diameter]="50"></mat-spinner>

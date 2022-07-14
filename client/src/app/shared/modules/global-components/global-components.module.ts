@@ -8,6 +8,7 @@ import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.
 import { EditDialogComponent } from './components/edit-task/edit-dialog.component';
 import { TasksComponent } from './components/tasks/tasks.component';
 import { TruncatePipe } from '../../pipes/truncate.pipe';
+import { MatNativeDateModule } from '@angular/material/core';
 
 const components = [
   AddTaskComponent,
@@ -20,7 +21,12 @@ const components = [
 
 @NgModule({
   declarations: [...components],
-  imports: [CommonModule, ReactiveFormsModule, MaterialModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MaterialModule,
+    MatNativeDateModule,
+  ],
   exports: [...components],
 })
 export class GlobalComponentsModule {}

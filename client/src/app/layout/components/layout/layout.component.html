@@ -44,14 +44,7 @@
             >{{ darkTheme ? "Light Mode" : "Dark Mode" }}</span
           >
         </a>
-        <a mat-list-item routerLink="/settings">
-          <mat-icon>settings</mat-icon>
-          <span
-            class="menu__label"
-            [class]="!isMenuOpen ? 'menu__label-hidden' : 'menu__label-visible'"
-            >Settings</span
-          >
-        </a>
+
         <a mat-list-item (click)="signOutUser()">
           <mat-icon>arrow_circle_left</mat-icon>
           <span
