@@ -34,15 +34,13 @@ class ProjectService {
   }
 
   async addTaskToProject(projectId, taskId) {
-    const project = await Project.findOneAndUpdate(
+    return Project.findOneAndUpdate(
       { _id: projectId },
       { $push: { tasks: taskId } },
       {
         new: true,
       }
     );
-
-    return project;
   }
 
   async updateProject(projectId, project) {
@@ -63,15 +61,13 @@ class ProjectService {
   }
 
   async deleteTaskFromProject(projectId, taskId) {
-    const project = await Project.findOneAndUpdate(
+    return Project.findOneAndUpdate(
       { _id: projectId },
       { $pull: { tasks: taskId } },
       {
         new: true,
       }
     );
-
-    return project;
   }
 }
 

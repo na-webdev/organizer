@@ -1,8 +1,12 @@
 const Task = require("../models/task.model.js");
+const ProjectService = require("./project.service.js");
 
 class TaskService {
-  async createNewTask(task) {
+  async createNewTask(task, projectId) {
     const newTask = new Task(task);
+    if (projectId) {
+      await ProjectService.addTaskToProject(projectId, newTask._id);
+    }
     return newTask.save();
   }
 
@@ -38,8 +42,11 @@ class TaskService {
     return updatedTask;
   }
 
-  async deleteTask(taskId) {
+  async deleteTask(taskId, projectId) {
     const deletedTask = await Task.findByIdAndDelete(taskId);
+    if (projectId) {
+      await ProjectService.deleteTaskFromProject(projectId, taskId);
+    }
     return deletedTask;
   }
 }
