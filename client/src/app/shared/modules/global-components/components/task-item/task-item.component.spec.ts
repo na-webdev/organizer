@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TaskInterfaceMock } from '../../../../../tasks/services/mocks/task-interface.mock';
+import { TaskInterfaceMock } from '../../../../types/mocks/task-interface.mock';
 
 import { TaskItemComponent } from './task-item.component';
 

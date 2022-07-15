@@ -25,12 +25,7 @@ export class TaskService {
       .pipe(
         tap((tasks: TaskInterface[]) => {
           if (mode === 'task') {
-            this.tasks = this.tasks.concat(
-              tasks.filter((t) => {
-                let isTaskExist = this.tasks.find((t2) => t2._id === t._id);
-                return !isTaskExist;
-              })
-            );
+            this.tasks = this.filterTasks(this.tasks, tasks);
           } else {
             this.tasks = tasks;
           }
@@ -42,14 +37,21 @@ export class TaskService {
       .subscribe();
   }
 
+  filterTasks(
+    oldTasks: TaskInterface[],
+    newTasks: TaskInterface[]
+  ): TaskInterface[] {
+    return oldTasks.concat(
+      newTasks.filter((t) => {
+        let isTaskExist = oldTasks.find((t2) => t2._id === t._id);
+        return !isTaskExist;
+      })
+    );
+  }
+
   setTasks(tasks: TaskInterface[], projectId: string = '', mode: string): void {
     if (mode === 'project') {
-      this.tasks = this.tasks.concat(
-        tasks.filter((t) => {
-          let isTaskExist = this.tasks.find((t2) => t2._id === t._id);
-          return !isTaskExist;
-        })
-      );
+      this.tasks = this.filterTasks(this.tasks, tasks);
     } else {
       this.tasks = tasks;
     }
@@ -96,51 +98,20 @@ export class TaskService {
       data['projectRef'] = projectId;
     }
 
-    return this.http.post<ResponseInterface>(apiUrl + 'tasks', data).pipe(
-      tap((res) => {
-        if (projectId) {
-          this.addTaskToProject(res._id, projectId)
-            .pipe(take(1))
-            .subscribe((projectRes) => {
-              this.tasks.unshift({
-                ...task,
-                _id: res._id,
-              });
-              this.tasksUpdated.next(this.tasks);
-            });
-        } else {
+    return this.http
+      .post<ResponseInterface>(
+        apiUrl + 'tasks' + `?projectId=${projectId}`,
+        data
+      )
+      .pipe(
+        tap((res) => {
           this.tasks.unshift({
             ...task,
             _id: res._id,
           });
           this.tasksUpdated.next(this.tasks);
-        }
-      })
-    );
-  }
-
-  addTaskToProject(
-    taskId: string,
-    projectId: string
-  ): Observable<ResponseInterface> {
-    return this.http.patch<ResponseInterface>(
-      apiUrl + 'projects/' + projectId + '/new-task',
-      {
-        taskId,
-      }
-    );
-  }
-
-  deleteTaskFromProject(
-    taskId: string,
-    projectId: string
-  ): Observable<ResponseInterface> {
-    return this.http.patch<ResponseInterface>(
-      apiUrl + 'projects/' + projectId + '/delete-task',
-      {
-        taskId,
-      }
-    );
+        })
+      );
   }
 
   updateTask(task: TaskInterface): Observable<ResponseInterface> {
@@ -187,20 +158,13 @@ export class TaskService {
     projectId: string = ''
   ): Observable<ResponseInterface> {
     return this.http
-      .delete<ResponseInterface>(apiUrl + 'tasks/' + task._id)
+      .delete<ResponseInterface>(
+        apiUrl + 'tasks/' + task._id + `?projectId=${projectId}`
+      )
       .pipe(
         tap((res) => {
-          if (projectId) {
-            this.deleteTaskFromProject(res._id, projectId)
-              .pipe(take(1))
-              .subscribe((projectRes) => {
-                this.tasks = this.tasks.filter((t) => t._id !== task._id);
-                this.tasksUpdated.next(this.tasks);
-              });
-          } else {
-            this.tasks = this.tasks.filter((t) => t._id !== task._id);
-            this.tasksUpdated.next(this.tasks);
-          }
+          this.tasks = this.tasks.filter((t) => t._id !== res._id);
+          this.tasksUpdated.next(this.tasks);
         })
       );
   }

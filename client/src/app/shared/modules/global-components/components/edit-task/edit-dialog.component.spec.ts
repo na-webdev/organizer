@@ -1,8 +1,12 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TaskInterfaceMock } from '../../../../../tasks/services/mocks/task-interface.mock';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TaskInterfaceMock } from 'src/app/shared/types/mocks/task-interface.mock';
+import { MatNativeDateModule } from '@angular/material/core';
 
 import { EditDialogComponent } from './edit-dialog.component';
 
@@ -12,7 +16,14 @@ describe('EditDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, MatDialogModule],
+      imports: [
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatInputModule,
+        BrowserAnimationsModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+      ],
       declarations: [EditDialogComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [

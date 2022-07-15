@@ -29,10 +29,16 @@ export class EditDialogComponent {
       }
     });
     this.editTaskForm.get('plannedDate')!.valueChanges.subscribe((date) => {
-      if (date && new Date(date) < new Date()) {
-        this.editTaskForm.get('plannedDate')!.setErrors({
-          invalidDate: true,
-        });
+      if (date) {
+        let now = new Date();
+        if (
+          new Date(date) <
+          new Date(now.getFullYear(), now.getMonth(), now.getDate())
+        ) {
+          this.editTaskForm.get('plannedDate')!.setErrors({
+            invalidDate: true,
+          });
+        }
       }
     });
   }
