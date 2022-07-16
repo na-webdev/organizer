@@ -102,7 +102,6 @@ describe('ProjectService', () => {
 
     service.addNewProject(ProjectMock).subscribe();
 
-    console.log(projects);
     service
       .updateProject(ProjectMock)
       .subscribe((p) => (updateProjectResponse = p));
