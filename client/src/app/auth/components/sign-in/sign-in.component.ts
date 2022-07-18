@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { AuthService } from '../../services/auth.service';
@@ -21,32 +26,32 @@ export class SignInComponent {
     private authService: AuthService,
     private alertService: AlertService,
     private router: Router
-  ) {}
+  ) {
+    // bind this to show alert function
+    this.showErrorAlert = this.showErrorAlert.bind(this);
+  }
 
   onSubmit(): void {
     const { email, password } = this.signInForm.value;
-    this.authService.signInUser(email, password).subscribe(
-      (res) => {
-        this.router.navigate(['/']);
-        this.alertService.alertMessage(`Welcome ${res.user.username}!`, 'info');
-        this.signInForm.reset();
-      },
-      (err) => {
-        this.alertService.alertMessage(err.error.message, 'danger');
-      }
-    );
+    this.authService.signInUser(email, password).subscribe((res) => {
+      this.router.navigate(['/']);
+      this.alertService.alertMessage(`Welcome ${res.user.username}!`, 'info');
+      this.signInForm.reset();
+    }, this.showErrorAlert);
   }
 
-  getEmailError(): string {
-    const errorObj = this.signInForm.get('email')!.errors;
+  getEmailError(errorObj: ValidationErrors | null): string {
     if (errorObj?.['required']) return 'Email is required';
-    if (errorObj?.['email']) return 'Email is invalid';
+    else if (errorObj?.['email']) return 'Email is invalid';
     return '';
   }
 
-  getPasswordError(): string {
-    const errorObj = this.signInForm.get('password')!.errors;
+  getPasswordError(errorObj: ValidationErrors | null): string {
     if (errorObj?.['required']) return 'Password is required';
     return '';
+  }
+
+  showErrorAlert(error: any): void {
+    this.alertService.alertMessage(error.error.message, 'danger');
   }
 }

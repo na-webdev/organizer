@@ -24,7 +24,7 @@ export class AuthInterceptor implements HttpInterceptor {
       });
 
       return next.handle(cloned).pipe(
-        catchError((err) => {
+        catchError((err: any) => {
           if (err.status === 401) {
             this.authService.signOut();
           }

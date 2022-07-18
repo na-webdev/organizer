@@ -7,8 +7,10 @@
       appearance="outline"
     >
       <mat-label>Name</mat-label>
-      <input formControlName="title" matInput cdkFocusInitial />
-      <mat-error *ngIf="editTaskForm.invalid">{{ getTitleError() }}</mat-error>
+      <input formControlName="title" matInput />
+      <mat-error *ngIf="editTaskForm.invalid">{{
+        getTitleError(this.editTaskForm.get("title")!.errors)
+      }}</mat-error>
     </mat-form-field>
     <mat-form-field id="deadline-picker" appearance="outline">
       <mat-label>Set date</mat-label>
@@ -21,7 +23,7 @@
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
       <mat-error *ngIf="editTaskForm.invalid">{{
-        getPlannedDateError()
+        getPlannedDateError(this.editTaskForm.get("plannedDate")!.errors)
       }}</mat-error>
     </mat-form-field>
   </form>

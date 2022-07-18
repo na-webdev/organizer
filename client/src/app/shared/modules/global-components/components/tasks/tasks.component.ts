@@ -48,11 +48,14 @@ export class TasksComponent implements OnInit, OnDestroy {
     private projectService: ProjectService
   ) {
     this.getAllTasks();
+    this.setCurrentProject = this.setCurrentProject.bind(this);
+    this.showErrorAlert = this.showErrorAlert.bind(this);
   }
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
-    if (this.route.snapshot.paramMap.get('id')) {
+    this.projectId = this.route.snapshot.paramMap.get('id');
+    if (this.projectId) {
       this.page = 0;
       this.getProjectData();
     } else {
@@ -62,23 +65,22 @@ export class TasksComponent implements OnInit, OnDestroy {
       this.page++;
     }
     this.eventSub = fromEvent(window, 'scroll')
-      .pipe(
-        tap(() => {
-          let pos =
-            (document.documentElement.scrollTop || document.body.scrollTop) +
-            document.documentElement.offsetHeight;
-          let max = document.documentElement.scrollHeight;
-
-          // pos/max will give you the distance between scroll bottom and and bottom of screen in percentage.
-          if (Math.floor(pos) == max) {
-            //Do your action here
-            this.loadMoreTasks();
-          }
-        }),
-        throttleTime(300)
-      )
-      .subscribe(() => {});
+      .pipe(tap(this.detectScroll), throttleTime(300))
+      .subscribe();
   }
+
+  detectScroll = () => {
+    let pos =
+      (document.documentElement.scrollTop || document.body.scrollTop) +
+      document.documentElement.offsetHeight;
+    let max = document.documentElement.scrollHeight;
+
+    // pos/max will give you the distance between scroll bottom and and bottom of screen in percentage.
+    if (Math.floor(pos) == max) {
+      //Do your action here
+      this.loadMoreTasks();
+    }
+  };
 
   ngOnDestroy(): void {
     this.tasksSubscription?.unsubscribe();
@@ -86,78 +88,92 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   getProjectData(): void {
-    this.projectId = this.route.snapshot.paramMap.get('id');
     this.projectService
       .getProjectById(this.projectId, this.page, 10)
       .pipe(take(1))
-      .subscribe((project) => {
-        this.project = project;
-        this.taskService.setTasks(
-          this.project.tasks,
-          this.projectId || '',
-          this.projectMode
-        );
+      .subscribe(this.setCurrentProject);
+  }
 
-        this.projectMode = 'project';
-        this.page++;
-      });
+  setCurrentProject(project: ProjectInterface): void {
+    this.project = project;
+    this.taskService.setTasks(
+      this.project.tasks,
+      this.projectId || '',
+      this.projectMode
+    );
+
+    this.projectMode = 'project';
+    this.page++;
   }
 
   getAllTasks(): void {
-    this.tasksSubscription = this.taskService.getAllTasks().subscribe(
-      (tasks) => {
-        this.completedTasks = tasks.filter((task) => task.completed);
-        this.incompleteTasks = tasks.filter(
-          (task) => !task.completed && !task.commonTask
-        );
-        this.commonTasks = tasks.filter(
-          (task) => task.commonTask && !task.completed
-        );
-
-        let now = new Date();
-        let today = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate()
-        ).getTime();
+    this.tasksSubscription = this.taskService
+      .getAllTasks()
+      .subscribe((tasks) => {
+        this.completedTasks = this.filterTasks(tasks, 'completed');
+        this.incompleteTasks = this.filterTasks(tasks, 'incomplete');
+        this.commonTasks = this.filterTasks(tasks, 'common');
 
         this.sections = {};
 
-        this.incompleteTasks.forEach((task) => {
-          let taskDate = new Date(task.plannedDate);
-          let taskDay = new Date(
-            taskDate.getFullYear(),
-            taskDate.getMonth(),
-            taskDate.getDate()
-          ).getTime();
-          if (taskDay === today) {
-            this.sections['Today'] = {
-              date: taskDay,
-              tasks: [...(this.sections['Today']?.tasks || []), task],
-            };
-          } else if (taskDay === today + 86400000) {
-            this.sections['Tomorrow'] = {
-              date: taskDay,
-              tasks: [...(this.sections['Tomorrow']?.tasks || []), task],
-            };
-          } else {
-            let sectionName = new Date(taskDay).toLocaleDateString();
-            this.sections[sectionName] = {
-              date: taskDay,
-              tasks: [...(this.sections[sectionName]?.tasks || []), task],
-            };
-          }
-        });
+        this.incompleteTasks.forEach(this.addTaskToSection);
 
         this.pageSections = Object.entries(this.sections).sort(
           (a, b) => a[1].date - b[1].date
         );
-      },
-      (err) => {
-        this.alertService.alertMessage(err.error.message, 'danger');
-      }
-    );
+      }, this.showErrorAlert);
   }
+
+  filterTasks(tasks: TaskInterface[], type: string): TaskInterface[] {
+    if (type === 'completed') {
+      return tasks.filter(this.isTaskCompleted);
+    }
+    if (type === 'incomplete') {
+      return tasks.filter(this.isTaskIncomplete);
+    }
+    if (type === 'common') {
+      return tasks.filter(this.isTaskCommon);
+    }
+    return tasks;
+  }
+
+  isTaskCompleted = (task: TaskInterface) => task.completed;
+  isTaskIncomplete = (task: TaskInterface) =>
+    !task.completed && !task.commonTask;
+  isTaskCommon = (task: TaskInterface) => task.commonTask && !task.completed;
+
+  addTaskToSection = (task: TaskInterface) => {
+    let now = new Date();
+    let today = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    ).getTime();
+
+    let taskDate = new Date(task.plannedDate);
+    let taskDay = new Date(
+      taskDate.getFullYear(),
+      taskDate.getMonth(),
+      taskDate.getDate()
+    ).getTime();
+    if (taskDay === today) {
+      this.sections['Today'] = {
+        date: taskDay,
+        tasks: [...(this.sections['Today']?.tasks || []), task],
+      };
+    } else if (taskDay === today + 86400000) {
+      this.sections['Tomorrow'] = {
+        date: taskDay,
+        tasks: [...(this.sections['Tomorrow']?.tasks || []), task],
+      };
+    } else {
+      let sectionName = new Date(taskDay).toLocaleDateString();
+      this.sections[sectionName] = {
+        date: taskDay,
+        tasks: [...(this.sections[sectionName]?.tasks || []), task],
+      };
+    }
+  };
 
   drop(event: CdkDragDrop<TaskInterface[]>, title: string): void {
     let arr =
@@ -194,12 +210,7 @@ export class TasksComponent implements OnInit, OnDestroy {
       this.taskService
         .addNewTask(newTask, this.projectId || '')
         .pipe(take(1))
-        .subscribe(
-          (res) => {},
-          (err) => {
-            this.alertService.alertMessage(err.error.message, 'danger');
-          }
-        );
+        .subscribe(() => {}, this.showErrorAlert);
     }
   }
 
@@ -212,24 +223,14 @@ export class TasksComponent implements OnInit, OnDestroy {
     this.taskService
       .deleteTask(task, taskProjectId)
       .pipe(take(1))
-      .subscribe(
-        (res) => {},
-        (err) => {
-          this.alertService.alertMessage(err.error.message, 'danger');
-        }
-      );
+      .subscribe(() => {}, this.showErrorAlert);
   }
 
   updateTask(task: TaskInterface): void {
     this.taskService
       .updateTask(task)
       .pipe(take(1))
-      .subscribe(
-        (res) => {},
-        (err) => {
-          this.alertService.alertMessage(err.error.message, 'danger');
-        }
-      );
+      .subscribe(() => {}, this.showErrorAlert);
   }
 
   completeTask(task: TaskInterface): void {
@@ -237,22 +238,21 @@ export class TasksComponent implements OnInit, OnDestroy {
     this.taskService
       .updateTask(task)
       .pipe(take(1))
-      .subscribe(
-        (res) => {},
-        (err) => {
-          this.alertService.alertMessage(err.error.message, 'danger');
-        }
-      );
+      .subscribe(() => {}, this.showErrorAlert);
   }
 
   loadMoreTasks() {
     this.taskService.setLoadingState(true);
-    if (this.route.snapshot.paramMap.get('id')) {
+    if (this.projectId) {
       this.getProjectData();
     } else {
       this.taskService.requestUserTasks(this.page, 10, this.projectMode);
       this.projectMode = 'task';
       this.page++;
     }
+  }
+
+  showErrorAlert(error: any): void {
+    this.alertService.alertMessage(error.error.message, 'danger');
   }
 }

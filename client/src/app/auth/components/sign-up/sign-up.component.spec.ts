@@ -12,6 +12,8 @@ import { SignUpComponent } from './sign-up.component';
 describe('SignUpComponent', () => {
   let component: SignUpComponent;
   let fixture: ComponentFixture<SignUpComponent>;
+  let alertService: AlertService;
+  let authService: AuthService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -29,6 +31,8 @@ describe('SignUpComponent', () => {
   });
 
   beforeEach(() => {
+    alertService = TestBed.inject(AlertService);
+    authService = TestBed.inject(AuthService);
     fixture = TestBed.createComponent(SignUpComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -36,5 +40,52 @@ describe('SignUpComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('signs up user', () => {
+    const { username, email, password } = component.signUpForm.value;
+    component.onSubmit();
+    expect(authService.signUpUser).toHaveBeenCalledWith(
+      username,
+      email,
+      password
+    );
+  });
+
+  it('shows email error', () => {
+    expect(component.getEmailError({ email: true })).toBe('Email is invalid');
+    expect(component.getEmailError(null)).toBe('');
+  });
+
+  it('shows username error', () => {
+    expect(component.getUsernameError({ required: true })).toBe(
+      'Username is required'
+    );
+    expect(component.getUsernameError({ minlength: true })).toBe(
+      'Username must be at least 3 characters'
+    );
+    expect(component.getUsernameError(null)).toBe('');
+  });
+
+  it('shows password error', () => {
+    expect(component.getPasswordError({ required: true })).toBe(
+      'Password is required'
+    );
+    expect(component.getPasswordError({ minlength: true })).toBe(
+      'Password must be at least 6 characters'
+    );
+    expect(component.getPasswordError({ maxlength: true })).toBe(
+      'Password must be at most 16 characters'
+    );
+    expect(component.getPasswordError({ pattern: true })).toBe(
+      'Password must contain at least one lowercase letter'
+    );
+    expect(component.getPasswordError(null)).toBe('');
+  });
+
+  it('shows error alert', () => {
+    const error = { error: { message: 'Error' } };
+    component.showErrorAlert(error);
+    expect(alertService.alertMessage).toHaveBeenCalledWith('Error', 'danger');
   });
 });

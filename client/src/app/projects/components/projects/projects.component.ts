@@ -22,6 +22,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     private alertService: AlertService
   ) {
     this.projectService.requestUserProjects();
+    this.addNewProject = this.addNewProject.bind(this);
+    this.showErrorAlert = this.showErrorAlert.bind(this);
   }
 
   ngOnInit(): void {
@@ -37,54 +39,42 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       width: '400px',
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.projectService
-          .addNewProject({ ...result.newProject })
-          .pipe(take(1))
-          .subscribe(
-            (res) => {},
-            (err) => {
-              this.alertService.alertMessage(err.error.message, 'danger');
-            }
-          );
-      }
-    });
+    dialogRef.afterClosed().subscribe(this.addNewProject);
+  }
+
+  addNewProject(result: { newProject: ProjectInterface }): void {
+    if (result) {
+      this.projectService
+        .addNewProject({ ...result.newProject })
+        .pipe(take(1))
+        .subscribe((res) => {}, this.showErrorAlert);
+    }
   }
 
   updateProject(project: ProjectInterface): void {
     this.projectService
       .updateProject(project)
       .pipe(take(1))
-      .subscribe(
-        (res) => {},
-        (err) => {
-          this.alertService.alertMessage(err.error.message, 'danger');
-        }
-      );
+      .subscribe((res) => {}, this.showErrorAlert);
   }
 
   deleteProject(project: ProjectInterface): void {
     this.projectService
       .deleteProject(project)
       .pipe(take(1))
-      .subscribe(
-        (res) => {},
-        (err) => {
-          this.alertService.alertMessage(err.error.message, 'danger');
-        }
-      );
+      .subscribe((res) => {}, this.showErrorAlert);
   }
 
   getAllProjects(): void {
-    this.projectsSubscription = this.projectService.getAllProjects().subscribe(
-      (projects) => {
+    this.projectsSubscription = this.projectService
+      .getAllProjects()
+      .subscribe((projects) => {
         this.projects = projects;
         this.showSpinner = false;
-      },
-      (error) => {
-        this.alertService.alertMessage(error.error.message, 'danger');
-      }
-    );
+      }, this.showErrorAlert);
+  }
+
+  showErrorAlert(error: any): void {
+    this.alertService.alertMessage(error.error.message, 'danger');
   }
 }

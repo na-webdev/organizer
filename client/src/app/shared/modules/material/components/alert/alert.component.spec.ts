@@ -8,6 +8,7 @@ import { AlertComponent } from './alert.component';
 describe('AlertComponent', () => {
   let component: AlertComponent;
   let fixture: ComponentFixture<AlertComponent>;
+  let snackBar: MatSnackBar;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -21,6 +22,8 @@ describe('AlertComponent', () => {
         },
       ],
     }).compileComponents();
+
+    snackBar = TestBed.inject(MatSnackBar);
   });
 
   beforeEach(() => {
@@ -31,5 +34,10 @@ describe('AlertComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should close alert', () => {
+    component.closeAlert();
+    expect(snackBar.dismiss).toHaveBeenCalled();
   });
 });

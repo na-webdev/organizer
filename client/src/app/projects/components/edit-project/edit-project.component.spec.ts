@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ProjectInterfaceMock } from '../../services/mocks/project-interface.mock';
+import { ProjectMock } from '../../services/mocks/project.mock';
 
 import { EditProjectComponent } from './edit-project.component';
 
@@ -15,7 +15,7 @@ describe('EditProjectComponent', () => {
       imports: [ReactiveFormsModule, MatDialogModule],
       declarations: [EditProjectComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [{ provide: MAT_DIALOG_DATA, useValue: ProjectInterfaceMock }],
+      providers: [{ provide: MAT_DIALOG_DATA, useValue: ProjectMock }],
     }).compileComponents();
   });
 
@@ -27,5 +27,13 @@ describe('EditProjectComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('returns title error', () => {
+    expect(component.getTitleError()).toBe('');
+  });
+
+  it('returns description error', () => {
+    expect(component.getDescriptionError()).toBe('');
   });
 });

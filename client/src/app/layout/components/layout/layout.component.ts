@@ -3,9 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
-  Input,
   OnDestroy,
-  Output,
   Renderer2,
 } from '@angular/core';
 import { MenuItem } from '../../types/menu-item.interface';
