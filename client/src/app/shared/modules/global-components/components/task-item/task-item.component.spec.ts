@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
-import { EMPTY } from 'rxjs';
+import { DialogProvider } from 'src/app/shared/helpers/dialog-provider';
 import { TaskMock } from 'src/app/tasks/services/mocks/task.mock';
 import { TaskInterfaceMock } from '../../../../types/mocks/task-interface.mock';
 
@@ -19,16 +19,7 @@ describe('TaskItemComponent', () => {
       imports: [ReactiveFormsModule, RouterTestingModule],
       declarations: [TaskItemComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [
-        {
-          provide: MatDialog,
-          useValue: {
-            open: jasmine
-              .createSpy()
-              .and.returnValue({ afterClosed: () => EMPTY }),
-          },
-        },
-      ],
+      providers: [DialogProvider],
     }).compileComponents();
   });
 

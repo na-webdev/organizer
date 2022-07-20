@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { EMPTY } from 'rxjs';
+import { DialogProvider } from 'src/app/shared/helpers/dialog-provider';
 import { TruncatePipe } from 'src/app/shared/pipes/truncate.pipe';
 import { ProjectMock } from '../../services/mocks/project.mock';
 
@@ -19,16 +19,7 @@ describe('ProjectItemComponent', () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule],
       declarations: [ProjectItemComponent, TruncatePipe],
-      providers: [
-        {
-          provide: MatDialog,
-          useValue: {
-            open: jasmine
-              .createSpy()
-              .and.returnValue({ afterClosed: () => EMPTY }),
-          },
-        },
-      ],
+      providers: [DialogProvider],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
   });
