@@ -6,6 +6,7 @@ import { MatSnackBarMock } from './mocks/mat-snack-bar.mock';
 
 describe('AlertService', () => {
   let service: AlertService;
+  let snackBarMock: MatSnackBar;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -17,9 +18,18 @@ describe('AlertService', () => {
       ],
     });
     service = TestBed.inject(AlertService);
+    snackBarMock = TestBed.inject(MatSnackBar);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  it('should call snackBar.openFromComponent', () => {
+    const message = 'test';
+    const alertType = 'success';
+    const duration = 2500;
+    service.alertMessage(message, alertType, duration);
+    expect(snackBarMock.openFromComponent).toHaveBeenCalled();
   });
 });

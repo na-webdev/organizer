@@ -8,7 +8,10 @@
     <mat-form-field class="add-task__field" appearance="outline">
       <mat-label>Add task</mat-label>
       <input formControlName="title" class="add-task__input" matInput />
-      <mat-error *ngIf="addTaskForm.invalid">{{ getTaskError() }}</mat-error>
+      <mat-error
+        *ngIf="addTaskForm.invalid"
+        >{{ getTaskError(addTaskForm.get('title')!.errors?.['minlength']) }}</mat-error
+      >
     </mat-form-field>
     <button
       class="add-task__button"
@@ -39,7 +42,9 @@
         class="add-task__input"
         matInput
       />
-      <mat-error *ngIf="addTaskForm.invalid">{{ getRepeatError() }}</mat-error>
+      <mat-error *ngIf="addTaskForm.invalid">{{
+        getRepeatError(addTaskForm.get("repeat")!.errors)
+      }}</mat-error>
     </mat-form-field>
     <mat-form-field id="deadline-picker" appearance="outline">
       <mat-label>Start date</mat-label>
@@ -52,7 +57,7 @@
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
       <mat-error *ngIf="addTaskForm.invalid">{{
-        getPlannedDateError()
+        getPlannedDateError(addTaskForm.get("plannedDate")!.errors)
       }}</mat-error>
     </mat-form-field>
   </div>

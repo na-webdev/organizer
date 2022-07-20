@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -30,38 +35,36 @@ export class SignUpComponent {
   constructor(
     private authService: AuthService,
     private alertService: AlertService
-  ) {}
+  ) {
+    this.showErrorAlert = this.showErrorAlert.bind(this);
+  }
 
   onSubmit(): void {
     const { username, email, password } = this.signUpForm.value;
-    this.authService.signUpUser(username, email, password).subscribe(
-      (res) => {
-        this.alertService.alertMessage(res.message, 'success');
-        this.signUpForm.reset();
-      },
-      (err) => {
-        this.alertService.alertMessage(err.error.message, 'danger');
-      }
-    );
+    this.authService.signUpUser(username, email, password).subscribe((res) => {
+      this.alertService.alertMessage(res.message, 'success');
+      this.signUpForm.reset();
+    }, this.showErrorAlert);
   }
 
-  getUsernameError(): string {
-    const errorObj = this.signUpForm.get('username')!.errors;
+  showErrorAlert(err: any) {
+    this.alertService.alertMessage(err.error.message, 'danger');
+  }
+
+  getUsernameError(errorObj: ValidationErrors | null): string {
     if (errorObj?.['required']) return 'Username is required';
     if (errorObj?.['minlength'])
       return 'Username must be at least 3 characters';
     return '';
   }
 
-  getEmailError(): string {
-    const errorObj = this.signUpForm.get('email')!.errors;
+  getEmailError(errorObj: ValidationErrors | null): string {
     if (errorObj?.['required']) return 'Email is required';
     if (errorObj?.['email']) return 'Email is invalid';
     return '';
   }
 
-  getPasswordError(): string {
-    const errorObj = this.signUpForm.get('password')!.errors;
+  getPasswordError(errorObj: ValidationErrors | null): string {
     if (errorObj?.['required']) return 'Password is required';
     if (errorObj?.['minlength'])
       return 'Password must be at least 6 characters';

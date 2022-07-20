@@ -9,12 +9,16 @@
     <mat-form-field class="sign-up__field" appearance="outline">
       <mat-label>Username</mat-label>
       <input formControlName="username" matInput />
-      <mat-error *ngIf="signUpForm.invalid">{{ getUsernameError() }}</mat-error>
+      <mat-error *ngIf="signUpForm.invalid">{{
+        getUsernameError(this.signUpForm.get("username")!.errors)
+      }}</mat-error>
     </mat-form-field>
     <mat-form-field class="sign-up__field" appearance="outline">
       <mat-label>Email</mat-label>
       <input formControlName="email" type="email" matInput />
-      <mat-error *ngIf="signUpForm.invalid">{{ getEmailError() }}</mat-error>
+      <mat-error *ngIf="signUpForm.invalid">{{
+        getEmailError(this.signUpForm.get("email")!.errors)
+      }}</mat-error>
     </mat-form-field>
     <mat-form-field class="sign-up__field" appearance="outline">
       <mat-label>Password</mat-label>
@@ -33,7 +37,9 @@
       >
         <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
       </button>
-      <mat-error *ngIf="signUpForm.invalid">{{ getPasswordError() }}</mat-error>
+      <mat-error *ngIf="signUpForm.invalid">{{
+        getPasswordError(this.signUpForm.get("password")!.errors)
+      }}</mat-error>
     </mat-form-field>
 
     <button

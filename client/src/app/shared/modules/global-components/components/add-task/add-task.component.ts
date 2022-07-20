@@ -1,5 +1,10 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { TaskInterface } from 'src/app/shared/types/task.interface';
 
 @Component({
@@ -52,10 +57,8 @@ export class AddTaskComponent implements OnInit {
     }
   }
 
-  getTaskError(): string {
-    return this.addTaskForm.get('title')!.errors?.['minlength']
-      ? 'Task must be at least 3 characters long'
-      : '';
+  getTaskError(errorObj: ValidationErrors | null): string {
+    return errorObj?.['minlength'] ? 'Title must be at least 3 characters' : '';
   }
 
   setInputListeners() {
@@ -90,8 +93,7 @@ export class AddTaskComponent implements OnInit {
     });
   }
 
-  getPlannedDateError(): string {
-    const errorObj = this.addTaskForm.get('plannedDate')!.errors;
+  getPlannedDateError(errorObj: ValidationErrors | null): string {
     if (errorObj) {
       if (errorObj?.['invalidDate']) {
         return 'Date must be in the future';
@@ -100,8 +102,7 @@ export class AddTaskComponent implements OnInit {
     return '';
   }
 
-  getRepeatError(): string {
-    const errorObj = this.addTaskForm.get('repeat')!.errors;
+  getRepeatError(errorObj: ValidationErrors | null): string {
     if (errorObj) {
       if (errorObj?.['min']) {
         return 'Repeat must be at least 1';

@@ -19,10 +19,13 @@ const getUserTasks = async (req, res, next) => {
 const addNewTask = async (req, res, next) => {
   try {
     const userId = req.user._id;
-    const newTask = await TaskService.createNewTask({
-      ...req.body,
-      userRef: userId,
-    });
+    const newTask = await TaskService.createNewTask(
+      {
+        ...req.body,
+        userRef: userId,
+      },
+      req.query.projectId
+    );
 
     res.status(201).json({ _id: newTask._id });
   } catch (error) {
@@ -73,7 +76,10 @@ const reorderTasks = async (req, res, next) => {
 
 const deleteTask = async (req, res, next) => {
   try {
-    const task = await TaskService.deleteTask(req.params.id);
+    const task = await TaskService.deleteTask(
+      req.params.id,
+      req.query.projectId
+    );
 
     if (!task) {
       throw createError(404, "Task not found");

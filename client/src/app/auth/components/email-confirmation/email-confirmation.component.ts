@@ -18,33 +18,31 @@ export class EmailConfirmationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const token = this.route.snapshot.paramMap.get('token');
+    const token: string | null = this.route.snapshot.paramMap.get('token');
+    this.confirmUser(token);
+  }
+
+  confirmUser(token: string | null): void {
     if (token)
       this.authService
         .confirmUser(token)
         .pipe(take(1))
-        .subscribe(
-          (res) => {
-            if (res.message === 'User confirmed') this.status = 'confirmed';
-          },
-          (err) => {
-            if (err.error.message === 'Token expired') this.status = 'expired';
-            else this.status = 'error';
-          }
-        );
+        .subscribe((res) => {
+          if (res.message === 'User confirmed') this.status = 'confirmed';
+        }, this.setErrorStatus);
   }
 
   requestNewToken(token: string): void {
     this.authService
       .requestNewToken(token)
       .pipe(take(1))
-      .subscribe(
-        (res) => {
-          this.status = 'pending';
-        },
-        (err) => {
-          this.status = 'error';
-        }
-      );
+      .subscribe((res) => {
+        this.status = 'pending';
+      }, this.setErrorStatus);
+  }
+
+  setErrorStatus(err: any): void {
+    if (err.error.message === 'Token expired') this.status = 'expired';
+    else this.status = 'error';
   }
 }

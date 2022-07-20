@@ -25,19 +25,30 @@ export class ProjectItemComponent implements OnInit {
     private _router: Router,
     public dialog: MatDialog,
     private route: ActivatedRoute
-  ) {}
+  ) {
+    this.emitDeleteProjectEvent = this.emitDeleteProjectEvent.bind(this);
+    this.emitUpdateProjectEvent = this.emitUpdateProjectEvent.bind(this);
+  }
 
   ngOnInit(): void {
+    this.filterTasks();
+    this.calculateCompletion();
+  }
+
+  filterTasks(): void {
     this.project!.tasks?.forEach((task: TaskInterface) => {
       if (task.completed) {
         this.completed++;
       } else {
         this.incomplete++;
       }
-      this.completionPercentage = Math.round(
-        (this.completed / (this.completed + this.incomplete)) * 100
-      );
     });
+  }
+
+  calculateCompletion(): void {
+    this.completionPercentage = Math.round(
+      (this.completed / (this.completed + this.incomplete)) * 100
+    );
   }
 
   openProject(project: ProjectInterface): void {
@@ -58,9 +69,11 @@ export class ProjectItemComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      result && this.deleteProjectEvent.emit(this.project);
-    });
+    dialogRef.afterClosed().subscribe(this.emitDeleteProjectEvent);
+  }
+
+  emitDeleteProjectEvent(result: boolean): void {
+    result && this.deleteProjectEvent.emit(this.project);
   }
 
   editProject(): void {
@@ -69,13 +82,15 @@ export class ProjectItemComponent implements OnInit {
       data: this.project,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.updateProjectEvent.emit({
-          ...this.project,
-          ...result.updatedProject,
-        });
-      }
-    });
+    dialogRef.afterClosed().subscribe(this.emitUpdateProjectEvent);
+  }
+
+  emitUpdateProjectEvent(result: { updatedProject: ProjectInterface }): void {
+    if (result) {
+      this.updateProjectEvent.emit({
+        ...this.project,
+        ...result.updatedProject,
+      });
+    }
   }
 }

@@ -19,18 +19,22 @@ export class TaskItemComponent {
   isEditMode: boolean = false;
   projectTitle!: string | undefined;
 
-  constructor(public dialog: MatDialog, private _router: Router) {}
+  constructor(public dialog: MatDialog, private _router: Router) {
+    this.emitEditEvent = this.emitEditEvent.bind(this);
+  }
 
   onEdit(): void {
     let dialogRef = this.dialog.open(EditDialogComponent, {
       width: '300px',
       data: this.task,
     });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.updateTaskEvent.emit(result);
-      }
-    });
+    dialogRef.afterClosed().subscribe(this.emitEditEvent);
+  }
+
+  emitEditEvent(result: TaskInterface): void {
+    if (result) {
+      this.updateTaskEvent.emit(result);
+    }
   }
 
   onDelete(): void {
@@ -40,9 +44,15 @@ export class TaskItemComponent {
         message: 'Are you sure you want to delete this task?',
       },
     });
-    dialogRef.afterClosed().subscribe((result) => {
-      result && this.deleteTaskEvent.emit(this.task);
-    });
+    dialogRef
+      .afterClosed()
+      .subscribe(this.emitDeleteEvent.bind(this, this.task));
+  }
+
+  emitDeleteEvent(result: TaskInterface): void {
+    if (result) {
+      this.deleteTaskEvent.emit(result);
+    }
   }
 
   onComplete(): void {

@@ -26,4 +26,12 @@ describe('AddProjectComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('returns title error', () => {
+    expect(component.getTitleError()).toBe('');
+  });
+
+  it('returns description error', () => {
+    expect(component.getDescriptionError()).toBe('');
+  });
 });
