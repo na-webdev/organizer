@@ -11,7 +11,7 @@ class ProjectService {
   async getProjectWithTasks(id, pageNumber, limit) {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const project = await Project.findOne({ _id: id }).populate({
+    const project = Project.findOne({ _id: id }).populate({
       path: "tasks",
       match: { $or: [{ plannedDate: { $gte: today } }, { commonTask: true }] },
       options: {
@@ -24,8 +24,7 @@ class ProjectService {
   }
 
   async getProjectById(id) {
-    const project = await Project.findOne({ _id: id });
-    return project;
+    return Project.findOne({ _id: id });
   }
 
   async createNewProject(project) {
