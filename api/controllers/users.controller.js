@@ -107,6 +107,10 @@ const confirmUser = async (req, res, next) => {
     const confirmationToken = req.params.token;
 
     const payload = jwt.decode(confirmationToken);
+    if (!payload) {
+      next(createError(401, "Invalid token"));
+      return;
+    }
     if (payload.expiresIn < new Date().getTime()) {
       next(createError(401, "Token expired"));
       return;
@@ -131,6 +135,10 @@ const requestNewToken = async (req, res, next) => {
   try {
     const { token } = req.body;
     const payload = jwt.decode(token);
+    if (!payload) {
+      next(createError(401, "Invalid token"));
+      return;
+    }
 
     const newPayload = {
       email: payload.email,

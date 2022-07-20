@@ -40,7 +40,7 @@ const addNewTask = async (req, res, next) => {
 
 const updateTask = async (req, res, next) => {
   try {
-    const updatedTask = TaskService.updateTask(req.params.id, req.body);
+    const updatedTask = await TaskService.updateTask(req.params.id, req.body);
 
     if (!updatedTask) {
       throw createError(404, "Task not found");
