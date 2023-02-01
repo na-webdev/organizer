@@ -44,7 +44,7 @@ export class SignUpComponent {
     this.authService.signUpUser(username, email, password).subscribe((res) => {
       this.alertService.alertMessage(res.message, 'success');
       this.signUpForm.reset();
-    }, this.showErrorAlert);
+    });
   }
 
   showErrorAlert(err: any) {

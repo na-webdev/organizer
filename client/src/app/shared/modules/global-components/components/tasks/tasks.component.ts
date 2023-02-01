@@ -14,6 +14,7 @@ import { TaskInterface } from 'src/app/shared/types/task.interface';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectService } from 'src/app/projects/services/project.service';
 import { ProjectInterface } from 'src/app/projects/types/project.interface';
+import { LoadingService } from '../../../../services/loading/loading.service';
 
 @Component({
   selector: 'app-tasks',
@@ -38,14 +39,14 @@ export class TasksComponent implements OnInit, OnDestroy {
   commonTasks: TaskInterface[] = [];
   page: number = 0;
   oldTasksAmount: number = 0;
-  loading$ = this.taskService.getLoadingState();
   eventSub!: Subscription;
 
   constructor(
     public taskService: TaskService,
     public alertService: AlertService,
     private route: ActivatedRoute,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    public loadingService: LoadingService
   ) {
     this.getAllTasks();
     this.setCurrentProject = this.setCurrentProject.bind(this);
@@ -242,7 +243,6 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   loadMoreTasks() {
-    this.taskService.setLoadingState(true);
     if (this.projectId) {
       this.getProjectData();
     } else {

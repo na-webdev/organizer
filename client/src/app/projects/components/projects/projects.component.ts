@@ -6,6 +6,7 @@ import { ProjectService } from '../../services/project.service';
 import { ProjectInterface } from '../../types/project.interface';
 import { AddProjectComponent } from '../add-project/add-project.component';
 import { DialogService } from '../../../shared/services/dialog/dialog.service';
+import { LoadingService } from '../../../shared/services/loading/loading.service';
 
 @Component({
   selector: 'app-projects',
@@ -18,8 +19,8 @@ export class ProjectsComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     public projectService: ProjectService,
-    private alertService: AlertService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    public loadingService: LoadingService
   ) {}
 
   ngOnInit(): void {

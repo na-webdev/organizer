@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, take, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { UserInterface } from '../types/user.interface';
 
@@ -20,11 +20,13 @@ export class AuthService {
     email: string,
     password: string
   ): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(apiUrl + 'users/sign-up', {
-      username,
-      email,
-      password,
-    });
+    return this.http
+      .post<{ message: string }>(apiUrl + 'users/sign-up', {
+        username,
+        email,
+        password,
+      })
+      .pipe(take(1));
   }
 
   signInUser(
@@ -39,7 +41,8 @@ export class AuthService {
       .pipe(
         tap((res) => {
           this.setSession(res.token, res.user);
-        })
+        }),
+        take(1)
       );
   }
 
@@ -61,6 +64,7 @@ export class AuthService {
   requestUserData(): void {
     this.http
       .get<{ user: UserInterface }>(apiUrl + 'users/user-data')
+      .pipe(take(1))
       .subscribe((res) => {
         this.userData.next(res.user);
       });

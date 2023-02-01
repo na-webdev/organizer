@@ -1,4 +1,4 @@
-<div *ngIf="projectMode !== 'pending'; else spinner">
+<div *ngIf="projectMode !== 'pending'">
   <h1 [ngStyle]="{ 'margin-bottom': project ? '0' : '16px' }" class="title">
     {{
       projectMode === "project"
@@ -54,7 +54,7 @@
           </div>
         </div>
         <mat-spinner
-          *ngIf="loading$ | async"
+          *ngIf="loadingService.isLoading() | async"
           color="primary"
           [diameter]="30"
           class="spinner"
@@ -73,7 +73,7 @@
           (deleteTaskEvent)="deleteTask($event)"
         ></app-task-item>
         <mat-spinner
-          *ngIf="loading$ | async"
+          *ngIf="loadingService.isLoading() | async"
           color="primary"
           [diameter]="30"
           class="spinner"
@@ -82,6 +82,3 @@
     </mat-tab>
   </mat-tab-group>
 </div>
-<ng-template #spinner>
-  <mat-spinner color="primary" [diameter]="50"></mat-spinner>
-</ng-template>

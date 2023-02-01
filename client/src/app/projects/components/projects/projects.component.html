@@ -13,4 +13,6 @@
     [project]="project"
   ></app-project-item>
 </div>
+<app-loading *ngIf="this.loadingService.isLoading() | async"></app-loading>
+
 <router-outlet></router-outlet>

@@ -10,7 +10,7 @@ export class AlertService {
 
   alertMessage(
     message: string,
-    alertType: string = 'success',
+    alertType: 'danger' | 'info' | 'success' = 'success',
     duration: number = 2500
   ): void {
     let snackBarRef = this._snackBar.openFromComponent(AlertComponent, {

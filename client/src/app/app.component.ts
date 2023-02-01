@@ -8,10 +8,7 @@ import { LoadingService } from './shared/services/loading/loading.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  constructor(
-    private authService: AuthService,
-    public loadingService: LoadingService
-  ) {
+  constructor(private authService: AuthService) {
     this.authService.requestUserData();
   }
 }

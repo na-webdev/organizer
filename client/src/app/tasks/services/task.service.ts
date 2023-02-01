@@ -13,7 +13,6 @@ const apiUrl = environment.apiUrl;
 export class TaskService {
   private tasks: TaskInterface[] = [];
   private tasksUpdated = new BehaviorSubject<TaskInterface[]>(this.tasks);
-  private loading = new BehaviorSubject<boolean>(true);
 
   constructor(private http: HttpClient) {}
 
@@ -30,7 +29,6 @@ export class TaskService {
             this.tasks = tasks;
           }
           this.tasksUpdated.next(this.tasks);
-          this.setLoadingState(false);
         }),
         take(1)
       )
@@ -56,19 +54,10 @@ export class TaskService {
       this.tasks = tasks;
     }
     this.tasksUpdated.next(this.tasks);
-    this.setLoadingState(false);
   }
 
   getAllTasks(): Observable<TaskInterface[]> {
     return this.tasksUpdated.asObservable();
-  }
-
-  getLoadingState(): Observable<boolean> {
-    return this.loading.asObservable();
-  }
-
-  setLoadingState(state: boolean): void {
-    this.loading.next(state);
   }
 
   addNewTask(
