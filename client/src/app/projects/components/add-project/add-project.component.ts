@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-add-project',
@@ -8,12 +9,15 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class AddProjectComponent {
   addProjectForm: FormGroup = new FormGroup({
-    title: new FormControl('', [Validators.minLength(3)]),
+    title: new FormControl('', [Validators.required, Validators.minLength(3)]),
     description: new FormControl('', [
+      Validators.required,
       Validators.minLength(3),
       Validators.maxLength(100),
     ]),
   });
+
+  constructor(private dialogRef: MatDialogRef<AddProjectComponent>) {}
 
   getTitleError(): string {
     return this.addProjectForm.get('title')!.errors?.['minlength']
@@ -27,5 +31,13 @@ export class AddProjectComponent {
       : this.addProjectForm.get('description')!.errors?.['maxlength']
       ? 'Description must be at most 100 characters long'
       : '';
+  }
+
+  close() {
+    this.dialogRef.close(false);
+  }
+
+  save() {
+    this.dialogRef.close(this.addProjectForm.value);
   }
 }

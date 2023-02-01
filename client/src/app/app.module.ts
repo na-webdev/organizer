@@ -11,6 +11,7 @@ import { RouterModule } from '@angular/router';
 import { ProjectsModule } from './projects/projects.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthInterceptor } from './auth/interceptors/auth.interceptor';
+import { GlobalComponentsModule } from './shared/modules/global-components/global-components.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,6 +25,7 @@ import { AuthInterceptor } from './auth/interceptors/auth.interceptor';
     TasksModule,
     ProjectsModule,
     AuthModule,
+    GlobalComponentsModule,
   ],
   providers: [
     {

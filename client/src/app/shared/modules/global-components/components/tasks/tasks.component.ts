@@ -8,7 +8,7 @@ import {
   tap,
   throttleTime,
 } from 'rxjs';
-import { AlertService } from 'src/app/shared/services/alert.service';
+import { AlertService } from 'src/app/shared/services/alert/alert.service';
 import { TaskService } from 'src/app/tasks/services/task.service';
 import { TaskInterface } from 'src/app/shared/types/task.interface';
 import { ActivatedRoute } from '@angular/router';

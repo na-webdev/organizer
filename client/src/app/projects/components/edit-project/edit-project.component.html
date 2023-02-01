@@ -29,16 +29,6 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button
-    [disabled]="
-      editProjectForm.invalid ||
-      !editProjectForm.value.title ||
-      !editProjectForm.value.description
-    "
-    mat-button
-    [mat-dialog-close]="{ updatedProject: editProjectForm.value }"
-  >
-    Save
-  </button>
+  <button (click)="close()" mat-button>Cancel</button>
+  <button (click)="save()" [disabled]="editProjectForm.invalid" mat-button>Save</button>
 </mat-dialog-actions>

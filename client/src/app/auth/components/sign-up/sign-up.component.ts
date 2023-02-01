@@ -5,7 +5,7 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { AlertService } from 'src/app/shared/services/alert.service';
+import { AlertService } from 'src/app/shared/services/alert/alert.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({

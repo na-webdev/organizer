@@ -40,12 +40,12 @@ describe('ProjectItemComponent', () => {
 
   it('filters project tasks', () => {
     component.ngOnInit();
-    expect(component.completed).toBe(0);
-    expect(component.incomplete).toBe(4);
+    expect(component.completedTaskCount).toBe(0);
+    expect(component.incompleteTasksCount).toBe(4);
   });
 
   it('opens dialog', () => {
-    component.deleteProject();
+    component.onDeleteProject();
     expect(component.dialog.open).toHaveBeenCalled();
     expect(component.deleteProjectEvent).toBeTruthy();
   });

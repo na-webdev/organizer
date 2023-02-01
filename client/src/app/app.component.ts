@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from './auth/services/auth.service';
+import { LoadingService } from './shared/services/loading/loading.service';
 
 @Component({
   selector: 'app-root',
@@ -7,7 +8,10 @@ import { AuthService } from './auth/services/auth.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    public loadingService: LoadingService
+  ) {
     this.authService.requestUserData();
   }
 }

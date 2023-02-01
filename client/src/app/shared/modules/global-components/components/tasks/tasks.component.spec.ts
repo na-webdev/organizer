@@ -2,11 +2,11 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Output } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TaskService } from '../../../../../tasks/services/task.service';
-import { AlertService } from 'src/app/shared/services/alert.service';
+import { AlertService } from 'src/app/shared/services/alert/alert.service';
 
 import { TasksComponent } from './tasks.component';
 import { TaskServiceMock } from '../../../../../tasks/services/mocks/task-service.mock';
-import { AlertServiceMock } from 'src/app/shared/services/mocks/alert-service.mock';
+import { AlertServiceMock } from 'src/app/shared/services/alert/mocks/alert-service.mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ProjectService } from 'src/app/projects/services/project.service';
 import { ProjectServiceMock } from 'src/app/projects/services/mocks/project-service.mock';

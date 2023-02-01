@@ -1,9 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, take, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  finalize,
+  Observable,
+  Subject,
+  take,
+  tap,
+} from 'rxjs';
 import { ResponseInterface } from 'src/app/shared/types/response.interface';
 import { environment } from 'src/environments/environment';
 import { ProjectInterface } from '../types/project.interface';
+import { LoadingService } from '../../shared/services/loading/loading.service';
 
 const apiUrl = environment.apiUrl;
 
@@ -11,28 +19,30 @@ const apiUrl = environment.apiUrl;
   providedIn: 'root',
 })
 export class ProjectService {
-  private projects: ProjectInterface[] = [];
-  private projectsUpdated = new BehaviorSubject<ProjectInterface[]>(
-    this.projects
-  );
+  private projectsSubject = new BehaviorSubject<ProjectInterface[]>([]);
+  private projects = this.projectsSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private loadingService: LoadingService
+  ) {}
 
-  requestUserProjects(): void {
-    this.http
+  requestUserProjects(): void {}
+
+  getAllProjects(): Observable<ProjectInterface[]> {
+    if (this.projectsSubject.value && this.projectsSubject.value.length) {
+      return this.projectsSubject.asObservable();
+    }
+
+    const observable = this.http
       .get<ProjectInterface[]>(apiUrl + 'projects')
       .pipe(
         tap((projects: ProjectInterface[]) => {
-          this.projects = projects;
-          this.projectsUpdated.next(this.projects);
-        }),
-        take(1)
-      )
-      .subscribe();
-  }
+          this.projectsSubject.next(projects);
+        })
+      );
 
-  getAllProjects(): Observable<ProjectInterface[]> {
-    return this.projectsUpdated.asObservable();
+    return this.loadingService.requestObservableHandler(observable, false);
   }
 
   getProjectById(
@@ -46,38 +56,49 @@ export class ProjectService {
   }
 
   addNewProject(project: ProjectInterface): Observable<ResponseInterface> {
-    return this.http.post<ResponseInterface>(apiUrl + 'projects', project).pipe(
-      tap((res) => {
-        this.projects.unshift({ ...project, _id: res._id });
-        this.projectsUpdated.next(this.projects);
-      })
-    );
+    const observable = this.http
+      .post<ResponseInterface>(apiUrl + 'projects', project)
+      .pipe(
+        tap((res) => {
+          const newProjects = [
+            ...this.projectsSubject.value,
+            { ...project, _id: res._id },
+          ];
+          this.projectsSubject.next(newProjects);
+        })
+      );
+    return this.loadingService.requestObservableHandler(observable);
   }
 
   updateProject(project: ProjectInterface): Observable<ResponseInterface> {
-    return this.http
+    const observable = this.http
       .patch<ResponseInterface>(apiUrl + 'projects/' + project._id, {
         title: project.title,
         description: project.description,
       })
       .pipe(
         tap((res) => {
-          this.projects = this.projects.map((p) =>
+          const updatedProjects = this.projectsSubject.value.map((p) =>
             p._id === project._id ? { ...p, ...project } : p
           );
-          this.projectsUpdated.next(this.projects);
+          this.projectsSubject.next(updatedProjects);
         })
       );
+
+    return this.loadingService.requestObservableHandler(observable);
   }
 
-  deleteProject(project: ProjectInterface): Observable<ResponseInterface> {
-    return this.http
-      .delete<ResponseInterface>(apiUrl + 'projects/' + project._id)
+  deleteProject(id: string): Observable<ResponseInterface> {
+    const observable = this.http
+      .delete<ResponseInterface>(apiUrl + 'projects/' + id)
       .pipe(
         tap((res) => {
-          this.projects = this.projects.filter((p) => p._id !== project._id);
-          this.projectsUpdated.next(this.projects);
+          const updateProjects = this.projectsSubject.value.filter(
+            (p) => p._id !== id
+          );
+          this.projectsSubject.next(updateProjects);
         })
       );
+    return this.loadingService.requestObservableHandler(observable);
   }
 }

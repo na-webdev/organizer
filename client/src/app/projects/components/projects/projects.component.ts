@@ -1,80 +1,46 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Subscription, take } from 'rxjs';
-import { AlertService } from 'src/app/shared/services/alert.service';
+import { Observable } from 'rxjs';
+import { AlertService } from 'src/app/shared/services/alert/alert.service';
 import { ProjectService } from '../../services/project.service';
 import { ProjectInterface } from '../../types/project.interface';
 import { AddProjectComponent } from '../add-project/add-project.component';
+import { DialogService } from '../../../shared/services/dialog/dialog.service';
 
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.scss'],
 })
-export class ProjectsComponent implements OnInit, OnDestroy {
-  projects: ProjectInterface[] = [];
-  projectsSubscription!: Subscription;
-  showSpinner: boolean = true;
+export class ProjectsComponent implements OnInit {
+  projects$: Observable<ProjectInterface[]>;
 
   constructor(
     private dialog: MatDialog,
-    private projectService: ProjectService,
-    private alertService: AlertService
-  ) {
-    this.projectService.requestUserProjects();
-    this.addNewProject = this.addNewProject.bind(this);
-    this.showErrorAlert = this.showErrorAlert.bind(this);
-  }
+    public projectService: ProjectService,
+    private alertService: AlertService,
+    private dialogService: DialogService
+  ) {}
 
   ngOnInit(): void {
-    this.getAllProjects();
-  }
-
-  ngOnDestroy(): void {
-    this.projectsSubscription?.unsubscribe();
+    this.projects$ = this.projectService.getAllProjects();
   }
 
   openAddProjectForm(): void {
-    const dialogRef = this.dialog.open(AddProjectComponent, {
-      width: '400px',
-    });
-
-    dialogRef.afterClosed().subscribe(this.addNewProject);
+    this.dialogService
+      .openCustomDialog(AddProjectComponent, {}, { width: '400px' })
+      .subscribe((val) => val && this.addNewProject(val));
   }
 
-  addNewProject(result: { newProject: ProjectInterface }): void {
-    if (result) {
-      this.projectService
-        .addNewProject({ ...result.newProject })
-        .pipe(take(1))
-        .subscribe((res) => {}, this.showErrorAlert);
-    }
+  addNewProject(project: ProjectInterface): void {
+    this.projectService.addNewProject(project).subscribe();
   }
 
   updateProject(project: ProjectInterface): void {
-    this.projectService
-      .updateProject(project)
-      .pipe(take(1))
-      .subscribe((res) => {}, this.showErrorAlert);
+    this.projectService.updateProject(project).subscribe();
   }
 
-  deleteProject(project: ProjectInterface): void {
-    this.projectService
-      .deleteProject(project)
-      .pipe(take(1))
-      .subscribe((res) => {}, this.showErrorAlert);
-  }
-
-  getAllProjects(): void {
-    this.projectsSubscription = this.projectService
-      .getAllProjects()
-      .subscribe((projects) => {
-        this.projects = projects;
-        this.showSpinner = false;
-      }, this.showErrorAlert);
-  }
-
-  showErrorAlert(error: any): void {
-    this.alertService.alertMessage(error.error.message, 'danger');
+  deleteProject(projectId: string): void {
+    this.projectService.deleteProject(projectId).subscribe();
   }
 }

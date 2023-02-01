@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ProjectInterface } from '../../types/project.interface';
 
 @Component({
@@ -9,11 +9,18 @@ import { ProjectInterface } from '../../types/project.interface';
   styleUrls: ['./edit-project.component.scss'],
 })
 export class EditProjectComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) private project: ProjectInterface) {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private project: ProjectInterface,
+    private dialogRef: MatDialogRef<EditProjectComponent>
+  ) {}
 
   editProjectForm: FormGroup = new FormGroup({
-    title: new FormControl(this.project.title, [Validators.minLength(3)]),
+    title: new FormControl(this.project.title, [
+      Validators.required,
+      Validators.minLength(3),
+    ]),
     description: new FormControl(this.project.description, [
+      Validators.required,
       Validators.minLength(3),
       Validators.maxLength(100),
     ]),
@@ -31,5 +38,13 @@ export class EditProjectComponent {
       : this.editProjectForm.get('description')!.errors?.['maxlength']
       ? 'Description must be at most 100 characters long'
       : '';
+  }
+
+  save() {
+    this.dialogRef.close({ ...this.project, ...this.editProjectForm.value });
+  }
+
+  close() {
+    this.dialogRef.close(false);
   }
 }

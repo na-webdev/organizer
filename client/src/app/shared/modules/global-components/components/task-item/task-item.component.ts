@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TaskInterface } from '../../../../types/task.interface';
-import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { EditDialogComponent } from '../edit-task/edit-dialog.component';
 
 @Component({
@@ -38,7 +38,7 @@ export class TaskItemComponent {
   }
 
   onDelete(): void {
-    let dialogRef = this.dialog.open(DeleteDialogComponent, {
+    let dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
         title: 'Delete task',
         message: 'Are you sure you want to delete this task?',

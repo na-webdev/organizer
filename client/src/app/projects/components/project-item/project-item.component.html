@@ -3,7 +3,7 @@
     <mat-card-title>
       <span
         [title]="project.title"
-        (click)="openProject(project)"
+        [routerLink]="[project._id]"
         class="project-card__title"
       >
         {{ project.title | truncate: 90 }}
@@ -19,16 +19,16 @@
   <div class="project-card__footer">
     <div class="project-card__info">
       <div class="project-card__completed">
-        <mat-icon>check</mat-icon>{{ completed }}
+        <mat-icon>check</mat-icon>{{ completedTaskCount }}
       </div>
       <div class="project-card__waiting">
         <mat-icon class="material-icons-outlined">watch_later</mat-icon>
-        {{ incomplete }}
+        {{ incompleteTasksCount }}
       </div>
     </div>
     <div class="project-card__actions">
-      <mat-icon (click)="editProject()">edit</mat-icon>
-      <mat-icon (click)="deleteProject()">delete</mat-icon>
+      <mat-icon (click)="onUpdateProject()">edit</mat-icon>
+      <mat-icon (click)="onDeleteProject()">delete</mat-icon>
     </div>
   </div>
   <mat-progress-bar
