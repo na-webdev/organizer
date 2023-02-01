@@ -11,11 +11,7 @@ const apiUrl = environment.apiUrl;
   providedIn: 'root',
 })
 export class AuthService {
-  userData = new BehaviorSubject<UserInterface>({
-    _id: '',
-    username: '',
-    email: '',
-  });
+  userData = new BehaviorSubject<UserInterface>(null);
 
   constructor(private http: HttpClient, private router: Router) {}
 

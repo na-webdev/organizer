@@ -10,7 +10,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class EmailConfirmationComponent implements OnInit {
   status: string = 'pending';
-  token!: string;
+  token: string;
 
   constructor(
     private authService: AuthService,
@@ -18,14 +18,14 @@ export class EmailConfirmationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const token: string | null = this.route.snapshot.paramMap.get('token');
-    this.confirmUser(token);
+    this.token = this.route.snapshot.paramMap.get('token');
+    this.confirmUser();
   }
 
-  confirmUser(token: string | null): void {
-    if (token)
+  confirmUser(): void {
+    if (this.token)
       this.authService
-        .confirmUser(token)
+        .confirmUser(this.token)
         .pipe(take(1))
         .subscribe((res) => {
           if (res.message === 'User confirmed') this.status = 'confirmed';

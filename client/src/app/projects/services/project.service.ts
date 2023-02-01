@@ -1,17 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  BehaviorSubject,
-  finalize,
-  Observable,
-  Subject,
-  take,
-  tap,
-} from 'rxjs';
+import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
 import { ResponseInterface } from 'src/app/shared/types/response.interface';
 import { environment } from 'src/environments/environment';
 import { ProjectInterface } from '../types/project.interface';
-import { LoadingService } from '../../shared/services/loading/loading.service';
+import { RequestService } from '../../shared/services/request-handler/request.service';
 
 const apiUrl = environment.apiUrl;
 
@@ -24,7 +17,7 @@ export class ProjectService {
 
   constructor(
     private http: HttpClient,
-    private loadingService: LoadingService
+    private requestService: RequestService
   ) {}
 
   requestUserProjects(): void {}
@@ -37,12 +30,13 @@ export class ProjectService {
     const observable = this.http
       .get<ProjectInterface[]>(apiUrl + 'projects')
       .pipe(
-        tap((projects: ProjectInterface[]) => {
+        switchMap((projects) => {
           this.projectsSubject.next(projects);
+          return this.projectsSubject.asObservable();
         })
       );
 
-    return this.loadingService.requestObservableHandler(observable, false);
+    return this.requestService.handleLoadingAndErrors(observable);
   }
 
   getProjectById(
@@ -50,8 +44,10 @@ export class ProjectService {
     pageNumber: number,
     limit: number
   ): Observable<ProjectInterface> {
-    return this.http.get<ProjectInterface>(
-      apiUrl + 'projects/' + projectId + `?page=${pageNumber}&limit=${limit}`
+    return this.requestService.handleLoadingAndErrors(
+      this.http.get<ProjectInterface>(
+        apiUrl + 'projects/' + projectId + `?page=${pageNumber}&limit=${limit}`
+      )
     );
   }
 
@@ -67,7 +63,7 @@ export class ProjectService {
           this.projectsSubject.next(newProjects);
         })
       );
-    return this.loadingService.requestObservableHandler(observable);
+    return this.requestService.handleLoadingAndErrors(observable);
   }
 
   updateProject(project: ProjectInterface): Observable<ResponseInterface> {
@@ -85,7 +81,7 @@ export class ProjectService {
         })
       );
 
-    return this.loadingService.requestObservableHandler(observable);
+    return this.requestService.handleLoadingAndErrors(observable);
   }
 
   deleteProject(id: string): Observable<ResponseInterface> {
@@ -99,6 +95,6 @@ export class ProjectService {
           this.projectsSubject.next(updateProjects);
         })
       );
-    return this.loadingService.requestObservableHandler(observable);
+    return this.requestService.handleLoadingAndErrors(observable);
   }
 }

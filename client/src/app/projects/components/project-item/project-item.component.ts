@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { TaskInterface } from 'src/app/shared/types/task.interface';
 import { ProjectInterface } from '../../types/project.interface';
 import { EditProjectComponent } from '../edit-project/edit-project.component';
@@ -19,11 +18,7 @@ export class ProjectItemComponent implements OnInit {
   incompleteTasksCount: number;
   completionPercentage: number;
 
-  constructor(
-    private _router: Router,
-    private dialogService: DialogService,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private dialogService: DialogService) {}
 
   ngOnInit(): void {
     this.completedTaskCount = 0;
