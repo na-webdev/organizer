@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const createError = require("http-errors");
 
 const signUpValidation = Joi.object({
   username: Joi.string().trim().min(3).required(),

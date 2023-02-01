@@ -36,10 +36,9 @@ class TaskService {
   }
 
   async updateTask(taskId, task) {
-    const updatedTask = await Task.findOneAndUpdate({ _id: taskId }, task, {
+    return Task.findOneAndUpdate({ _id: taskId }, task, {
       new: true,
     });
-    return updatedTask;
   }
 
   async deleteTask(taskId, projectId) {
