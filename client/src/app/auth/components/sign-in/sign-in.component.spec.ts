@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AlertService } from 'src/app/shared/services/alert.service';
-import { AlertServiceMock } from 'src/app/shared/services/mocks/alert-service.mock';
+import { AlertService } from 'src/app/shared/services/alert/alert.service';
+import { AlertServiceMock } from 'src/app/shared/services/alert/mocks/alert-service.mock';
 import { AuthService } from '../../services/auth.service';
 import { AuthServiceMock } from '../../services/mocks/auth-service.mock';
 

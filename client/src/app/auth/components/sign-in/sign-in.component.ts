@@ -6,7 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertService } from 'src/app/shared/services/alert.service';
+import { AlertService } from 'src/app/shared/services/alert/alert.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({

@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBar, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
-import { MatSnackBarMock } from 'src/app/shared/services/mocks/mat-snack-bar.mock';
+import { MatSnackBarMock } from 'src/app/shared/services/alert/mocks/mat-snack-bar.mock';
 
 import { AlertComponent } from './alert.component';
 

@@ -9,13 +9,8 @@
     (deleteProjectEvent)="deleteProject($event)"
     (updateProjectEvent)="updateProject($event)"
     class="project-item"
-    *ngFor="let project of projects"
+    *ngFor="let project of projects$ | async"
     [project]="project"
   ></app-project-item>
 </div>
-<mat-spinner
-  *ngIf="projects.length === 0"
-  color="primary"
-  [diameter]="50"
-></mat-spinner>
 <router-outlet></router-outlet>
